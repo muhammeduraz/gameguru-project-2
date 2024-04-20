@@ -1,0 +1,25 @@
+using UnityEngine;
+
+namespace Assets.Scripts
+{
+    public class #SCRIPTNAME# : MonoBehaviour
+    {
+	    #region Variables
+
+        
+
+        #endregion Variables
+
+	    #region Properties
+
+        
+
+        #endregion Properties
+
+        #region Functions
+
+        
+
+        #endregion Functions
+    }
+}
