@@ -40,7 +40,6 @@ namespace Assets.Scripts.ParticleModule
         {
             _pool = null;
             _factory = null;
-            _signalBus = null;
             _cacheParticle = null;
 
             _signalBus.Unsubscribe<ParticleRequestSignal>(OnParticleRequestSignalFired);
