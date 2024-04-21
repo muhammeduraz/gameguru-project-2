@@ -1,5 +1,6 @@
 using Zenject;
 using Assets.Scripts.FinishModule;
+using Assets.Scripts.ParticleModule.Signals;
 
 namespace Assets.Scripts.Installers
 {
@@ -10,6 +11,7 @@ namespace Assets.Scripts.Installers
         public override void InstallBindings()
         {
             FinishModuleSignalInstaller.Install(Container);
+            ParticleModuleSignalInstaller.Install(Container);
         }
 
         #endregion Functions

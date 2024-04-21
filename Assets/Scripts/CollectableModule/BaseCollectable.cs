@@ -1,3 +1,4 @@
+using Zenject;
 using UnityEngine;
 using DG.Tweening;
 using Assets.Scripts.Interfaces.Interaction;
@@ -9,6 +10,7 @@ namespace Assets.Scripts.Collectables
         #region Variables
 
         private Tween _rotationTween;
+        protected SignalBus signalBus;
 
         [Header("Components")]
         [SerializeField] private float _rotationDuration = 2.0f;
@@ -29,6 +31,12 @@ namespace Assets.Scripts.Collectables
         #endregion Unity Functions
 
         #region Functions
+
+        [Inject]
+        private void BaseCollectableMonoConstructor(SignalBus signalBus)
+        {
+            this.signalBus = signalBus;
+        }
 
         protected void Disable()
         {
