@@ -20,7 +20,7 @@ namespace Assets.Scripts.Installers
             ParticleModuleSignalInstaller.Install(Container);
 
             Container.BindInterfacesAndSelfTo<Timer>().AsTransient();
-            
+
             Container.BindInterfacesAndSelfTo<Player>().FromComponentInHierarchy().AsSingle();
         }
 

@@ -28,12 +28,16 @@ namespace Assets.Scripts.PlayerModule
 
         public void Initialize()
         {
-            
+            _playerMovement.Initialize();
+            _playerAnimation.Initialize();
+            _playerInteraction.Initialize();
         }
 
         public void Dispose()
         {
-            
+            _playerMovement.Dispose();
+            _playerAnimation.Dispose();
+            _playerInteraction.Dispose();
         }
 
         #endregion Functions

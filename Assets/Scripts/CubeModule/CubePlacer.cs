@@ -3,6 +3,7 @@ using Zenject;
 using UnityEngine;
 using Unity.Mathematics;
 using Assets.Scripts.InputModule;
+using Assets.Scripts.CubeModule.Signals;
 
 namespace Assets.Scripts.CubeModule
 {
@@ -13,16 +14,18 @@ namespace Assets.Scripts.CubeModule
         private bool _isActive;
         private bool _isMovingRight;
 
+        private float _currentCubeSize;
+        private float _currentZPosition;
+
+        private float2 _movementRange;
+
         private Cube _currentCube;
         private Cube _previousCube;
 
         private CubePool _cubePool;
         private SignalBus _signalBus;
 
-        private float2 _movementRange;
-
-        private float _currentCubeSize;
-        private float _currentZPosition;
+        private CubePlacedSignal _cubePlacedSignal;
 
         #endregion Variables
 
@@ -45,6 +48,8 @@ namespace Assets.Scripts.CubeModule
 
             _cubePool = cubePool;
             _signalBus = signalBus;
+
+            _cubePlacedSignal = new CubePlacedSignal();
         }
 
         public void Initialize()
@@ -74,7 +79,7 @@ namespace Assets.Scripts.CubeModule
             _currentCube = null;
             _previousCube = null;
 
-            _signalBus.Subscribe<InputTapSignal>(OnInputTapSignalFired);
+            _signalBus.Unsubscribe<InputTapSignal>(OnInputTapSignalFired);
             _signalBus = null;
         }
 
@@ -87,6 +92,9 @@ namespace Assets.Scripts.CubeModule
 
         private void OnInputTapSignalFired()
         {
+            _cubePlacedSignal.Cube = _currentCube;
+            _signalBus.Fire(_cubePlacedSignal);
+
             _currentZPosition += 5.0f;
 
             _previousCube = _currentCube;
