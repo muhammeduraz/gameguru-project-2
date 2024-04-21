@@ -2,7 +2,7 @@ using System;
 using Zenject;
 using UnityEngine;
 
-namespace Assets.Scripts.Player
+namespace Assets.Scripts.PlayerModule
 {
     public class PlayerMovement : MonoBehaviour, IInitializable, IDisposable
     {

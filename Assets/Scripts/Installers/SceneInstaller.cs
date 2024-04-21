@@ -2,6 +2,7 @@ using Zenject;
 using Assets.Scripts.TimerModule;
 using Assets.Scripts.InputModule;
 using Assets.Scripts.FinishModule;
+using Assets.Scripts.PlayerModule;
 using Assets.Scripts.CubeModule.Signals;
 using Assets.Scripts.ParticleModule.Signals;
 
@@ -19,6 +20,8 @@ namespace Assets.Scripts.Installers
             ParticleModuleSignalInstaller.Install(Container);
 
             Container.BindInterfacesAndSelfTo<Timer>().AsTransient();
+            
+            Container.BindInterfacesAndSelfTo<Player>().FromComponentInHierarchy().AsSingle();
         }
 
         #endregion Functions

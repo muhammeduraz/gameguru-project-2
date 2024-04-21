@@ -26,7 +26,7 @@ namespace Assets.Scripts.CubeModule
 
         public void Initialize()
         {
-            _cubePool.Spawn();
+
         }
 
         public void Tick()

@@ -3,7 +3,7 @@ using Zenject;
 using UnityEngine;
 using Assets.Scripts.Interfaces.Interaction;
 
-namespace Assets.Scripts.Player
+namespace Assets.Scripts.PlayerModule
 {
     public class PlayerInteraction : MonoBehaviour, IInitializable, IDisposable
     {

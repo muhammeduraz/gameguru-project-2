@@ -2,7 +2,7 @@ using System;
 using Zenject;
 using UnityEngine;
 
-namespace Assets.Scripts.Player
+namespace Assets.Scripts.PlayerModule
 {
     public class Player : MonoBehaviour, IInitializable, IDisposable
     {
@@ -13,11 +13,14 @@ namespace Assets.Scripts.Player
         [SerializeField] private PlayerAnimation _playerAnimation;
         [SerializeField] private PlayerInteraction _playerInteraction;
 
+        [Header("Components")]
+        [SerializeField] private Transform _transform;
+
         #endregion Variables
 
         #region Properties
 
-
+        public Transform Transform { get => _transform; }
 
         #endregion Properties
 

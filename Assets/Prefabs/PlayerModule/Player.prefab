@@ -53,6 +53,7 @@ MonoBehaviour:
   _playerMovement: {fileID: 4917705934035722913}
   _playerAnimation: {fileID: 7611395825847606967}
   _playerInteraction: {fileID: 112843429462101689}
+  _transform: {fileID: 7282765906048620882}
 --- !u!114 &4917705934035722913
 MonoBehaviour:
   m_ObjectHideFlags: 0
