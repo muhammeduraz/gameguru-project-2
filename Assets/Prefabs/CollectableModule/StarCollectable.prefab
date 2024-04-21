@@ -94,6 +94,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 74b08a6aa1263404bb7b59e277024b40, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _rotationDuration: 2
   mesh: {fileID: 6626159654795369990}
   collectableCollider: {fileID: 2531966891315538593}
 --- !u!1001 &2241744389337620194
