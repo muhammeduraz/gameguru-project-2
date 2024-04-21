@@ -32,9 +32,6 @@ namespace Assets.Scripts.CameraModule
 
             baseCamera.m_Follow = cameraTarget;
             baseCamera.m_LookAt = cameraTarget;
-
-            Activate();
-            StartOrbitalCameraSequence();
         }
 
         public override void Dispose()
