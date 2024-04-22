@@ -151,7 +151,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 63619393edfa4b344b019613b18c416c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _rigidbodyDeactivationDuration: 10
+  _rigidbodyDeactivationDuration: 5
   _rigidbody: {fileID: 1203454007667628974}
   _boxCollider: {fileID: 5454646091303403838}
   _meshRenderer: {fileID: 3487374732790549716}

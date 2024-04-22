@@ -145,7 +145,7 @@ namespace Assets.Scripts.CubeModule
             float differenceInX = _currentCube.Position.x - _previousCube.Position.x;
             if (Mathf.Abs(differenceInX) >= _previousCube.Size.x)
             {
-                _currentCube.ActivateRigidbody();
+                _currentCube.ActivateRigidbodyAndDeactivateAsAsync();
                 // Fail the game
                 return;
             }

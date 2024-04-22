@@ -8,7 +8,7 @@ namespace Assets.Scripts.CubeModule
         #region Variables
 
         [Header("Settings")]
-        [SerializeField] private int _rigidbodyDeactivationDuration = 10;
+        [SerializeField] private int _rigidbodyDeactivationDuration = 5;
 
         [Header("Components")]
         [SerializeField] private Rigidbody _rigidbody;
@@ -34,12 +34,17 @@ namespace Assets.Scripts.CubeModule
         public void ActivateRigidbody()
         {
             _rigidbody.isKinematic = false;
-            DeactivateRigidbodyAsync();
         }
 
         public void DeactivateRigidbody()
         {
             _rigidbody.isKinematic = true;
+        }
+
+        public void ActivateRigidbodyAndDeactivateAsAsync()
+        {
+            ActivateRigidbody();
+            DeactivateRigidbodyAsync();
         }
 
         private async void DeactivateRigidbodyAsync()
