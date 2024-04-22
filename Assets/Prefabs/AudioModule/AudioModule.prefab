@@ -9,8 +9,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 9146410730309006769}
+  - component: {fileID: 2026954976157987336}
   - component: {fileID: 6146584952714797003}
-  - component: {fileID: 6491823984058957642}
+  - component: {fileID: 5739930712757921040}
   m_Layer: 0
   m_Name: AudioModule
   m_TagString: Untagged
@@ -33,6 +34,24 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2026954976157987336
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 23673878418784272}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 08eca9f7688a0a24685b89133b020c8e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _scriptableObjectInstallers: []
+  _monoInstallers:
+  - {fileID: 5739930712757921040}
+  _installerPrefabs: []
+  _autoRun: 1
+  _kernel: {fileID: 0}
 --- !u!82 &6146584952714797003
 AudioSource:
   m_ObjectHideFlags: 0
@@ -129,7 +148,7 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!114 &6491823984058957642
+--- !u!114 &5739930712757921040
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -138,12 +157,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 23673878418784272}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0166d8ff8d905b048b2448179e1f5d11, type: 3}
+  m_Script: {fileID: 11500000, guid: afc21efb248f263418b22911ec572295, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _components:
-  - {fileID: 6146584952714797003}
-  _identifier: 
-  _useSceneContext: 0
-  _context: {fileID: 0}
-  _bindType: 0
+  _audioSource: {fileID: 6146584952714797003}
+  _audioClip: {fileID: 8300000, guid: a805431f0f4f1dd44aa2de3e941a5018, type: 3}
+  _audioPlayerDataSO: {fileID: 11400000, guid: cc6337b40e7cd6c4584020e3eeb5179a, type: 2}

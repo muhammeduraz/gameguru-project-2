@@ -45,7 +45,7 @@ namespace Assets.Scripts.CubeModule
             _failSizeLimit = 0.3f;
             _currentZPosition = 5f;
 
-            _correctPlacementThreshold = 0.1f;
+            _correctPlacementThreshold = 0.2f;
 
             _movementSpeed = 5.0f;
             _movementRange = new float2(-6.0f, 6.0f);

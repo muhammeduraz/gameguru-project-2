@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Assets.Scripts.AudioModule
 {
-    public class AudioPlayer : IInitializable, IDisposable
+    public class AudioSourceManager : IInitializable, IDisposable
     {
         #region Variables
 
@@ -14,25 +14,31 @@ namespace Assets.Scripts.AudioModule
 
         #region Functions
 
-        public AudioPlayer(AudioSource audioSource)
+        public AudioSourceManager(AudioSource audioSource)
         {
             _audioSource = audioSource;
         }
 
         public void Initialize()
         {
-            
+
         }
 
         public void Dispose()
         {
-            
+
         }
 
         public void Play(AudioClip clip)
         {
             _audioSource.clip = clip;
             _audioSource.Play();
+        }
+
+        public void Play(AudioClip clip, float pitch)
+        {
+            _audioSource.pitch = pitch;
+            Play(clip);
         }
 
         #endregion Functions
