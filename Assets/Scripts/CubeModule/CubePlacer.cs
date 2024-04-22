@@ -14,8 +14,8 @@ namespace Assets.Scripts.CubeModule
         private bool _isActive;
         private bool _isMovingRight;
 
+        private float _failSizeLimit;
         private float _currentZPosition;
-        private float _offsetForDistanceCheck;
         private float _correctPlacementThreshold;
 
         private float _movementSpeed;
@@ -46,9 +46,9 @@ namespace Assets.Scripts.CubeModule
             _isActive = true;
             _isMovingRight = true;
 
+            _failSizeLimit = 0.2f;
             _currentZPosition = 5f;
 
-            _offsetForDistanceCheck = 0.05f;
             _correctPlacementThreshold = 0.2f;
 
             _movementSpeed = 5.0f;
@@ -107,7 +107,7 @@ namespace Assets.Scripts.CubeModule
 
         private bool IsTargetPositionReached(Vector3 targetPosition)
         {
-            return Mathf.Abs(_currentCube.Position.x) > (Mathf.Abs(targetPosition.x) - _offsetForDistanceCheck);
+            return Mathf.Approximately(_currentCube.Position.x, targetPosition.x);
         }
 
         private void SpawnCube()
@@ -145,24 +145,26 @@ namespace Assets.Scripts.CubeModule
             float differenceInX = _currentCube.Position.x - _previousCube.Position.x;
             if (Mathf.Abs(differenceInX) >= _previousCube.Size.x)
             {
+                _isActive = false;
                 _currentCube.ActivateRigidbodyAndDeactivateAsAsync();
                 // Fail the game
                 return;
             }
 
-            float newCenterX = _previousCube.Position.x + differenceInX / 2f;
+            Vector3 newCubeSize =  GetNewSize(differenceInX);
+            _currentCube.Size = newCubeSize;
 
-            Vector3 newCubePosition = _currentCube.Position;
-            newCubePosition.x = newCenterX;
-
-            float newCubeSizeX = _previousCube.Size.x - Mathf.Abs(differenceInX);
-            Vector3 newCubeSize = _previousCube.Size;
-            newCubeSize.x = newCubeSizeX;
+            Vector3 newCubePosition = GetNewPosition(differenceInX);
+            _currentCube.Position = newCubePosition;
 
             _currentCubeSize = newCubeSize;
 
-            _currentCube.Position = newCubePosition;
-            _currentCube.Size = newCubeSize;
+            if (newCubeSize.x <= _failSizeLimit)
+            {
+                // Fail the game
+                _isActive = false;
+                return;
+            }
 
             FireCubePlacedSignal();
         }
@@ -174,6 +176,24 @@ namespace Assets.Scripts.CubeModule
             _currentCube.Position = currentCubePosition;
 
             FireCubePlacedSignal(true);
+        }
+
+        private Vector3 GetNewSize(float differenceInX)
+        {
+            float newCubeSizeX = _previousCube.Size.x - Mathf.Abs(differenceInX);
+            Vector3 newCubeSize = _previousCube.Size;
+            newCubeSize.x = newCubeSizeX;
+
+            return newCubeSize;
+        }
+
+        private Vector3 GetNewPosition(float differenceInX)
+        {
+            float newCenterX = _previousCube.Position.x + differenceInX / 2f;
+            Vector3 newCubePosition = _currentCube.Position;
+            newCubePosition.x = newCenterX;
+
+            return newCubePosition;
         }
 
         #endregion Functions
