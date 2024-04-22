@@ -2,7 +2,7 @@ using System;
 using Zenject;
 using UnityEngine;
 using DG.Tweening;
-using Assets.Scripts.CubeModule.Signals;
+using System.Threading.Tasks;
 
 namespace Assets.Scripts.PlayerModule
 {
@@ -11,8 +11,7 @@ namespace Assets.Scripts.PlayerModule
         #region Variables
 
         private Tween _tween;
-        private SignalBus _signalBus;
-
+        
         [Header("Settings")]
         [SerializeField] private float _movementSpeed;
 
@@ -21,40 +20,28 @@ namespace Assets.Scripts.PlayerModule
 
         #endregion Variables
 
-        #region Properties
-
-
-
-        #endregion Properties
-
         #region Functions
-
-        [Inject]
-        private void PlayerMovementMonoConstructor(SignalBus signalBus)
-        {
-            _signalBus = signalBus;
-        }
 
         public void Initialize()
         {
-            _signalBus.Subscribe<CubePlacedSignal>(OnCubePlacedSignalFired);
+            
         }
 
         public void Dispose()
         {
-            _signalBus.Unsubscribe<CubePlacedSignal>(OnCubePlacedSignalFired);
-            _signalBus = null;
+            
         }
 
-        private void OnCubePlacedSignalFired(CubePlacedSignal cubePlacedSignal)
-        {
-            Move(cubePlacedSignal.Cube.transform.position);
-        }
-
-        public void Move(Vector3 position)
+        public async Task Move(Vector3 position)
         {
             _tween?.Kill();
             _tween = _transform.DOMove(position, 0.5f).SetEase(Ease.Linear);
+
+            Vector3 dir = position - _transform.position;
+            Quaternion lookRotation = Quaternion.LookRotation(dir);
+            _transform.DORotateQuaternion(lookRotation, 0.1f);
+
+            await _tween.AsyncWaitForCompletion();
         }
 
         #endregion Functions
