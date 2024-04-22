@@ -162,18 +162,17 @@ namespace Assets.Scripts.CubeModule
             Vector3 newCubePosition = GetNewCubePosition(differenceInX);
             _currentCube.Position = newCubePosition;
 
+            // Create fall cube
             _cacheFallCube = _cubePool.Spawn();
             _cacheFallCube.ChangeMaterial(_currentCube.MeshRenderer.material);
             _cacheFallCube.ActivateRigidbodyAndDeactivateAsAsync();
+
             // Set fall cube size
-            float fallCubeSizeX = _previousCube.Size.x - newCubeSize.x;
-            Vector3 fallCubeSize = _previousCube.Size;
-            fallCubeSize.x = fallCubeSizeX;
+            Vector3 fallCubeSize = GetFallCubeSize();
             _cacheFallCube.Size = fallCubeSize;
+
             // Set fall cube position
-            float fallCubePositionX = _currentCube.Position.x - newCubeSize.x / 2f * Mathf.Sign(-differenceInX) - fallCubeSizeX / 2f * Mathf.Sign(-differenceInX);
-            Vector3 fallCubePosition = newCubePosition;
-            fallCubePosition.x = fallCubePositionX;
+            Vector3 fallCubePosition = GetFallCubePosition(fallCubeSize.x, differenceInX);
             _cacheFallCube.Position = fallCubePosition;
 
             _currentCubeSize = newCubeSize;
@@ -213,6 +212,25 @@ namespace Assets.Scripts.CubeModule
             newCubePosition.x = newCenterX;
 
             return newCubePosition;
+        }
+
+        private Vector3 GetFallCubeSize()
+        {
+            float fallCubeSizeX = _previousCube.Size.x - _currentCube.Size.x;
+            Vector3 fallCubeSize = _previousCube.Size;
+            fallCubeSize.x = fallCubeSizeX;
+
+            return fallCubeSize;
+        }
+
+        private Vector3 GetFallCubePosition(float fallCubeSizeX, float differenceInX)
+        {
+            float divider = 2f * Mathf.Sign(-differenceInX);
+            float fallCubePositionX = _currentCube.Position.x - _currentCube.Size.x / divider - fallCubeSizeX / divider;
+            Vector3 fallCubePosition = _currentCube.Position;
+            fallCubePosition.x = fallCubePositionX;
+
+            return fallCubePosition;
         }
 
         #endregion Functions
