@@ -1,10 +1,22 @@
 using Zenject;
+using Assets.Scripts.CubeModule.Data;
 
 namespace Assets.Scripts.CubeModule
 {
     public class CubePool : MonoMemoryPool<Cube>
     {
+        #region Variables
+
+        private CubeColorDataSO _cubeColorDataSO;
+        
+        #endregion Variables
+        
         #region Functions
+
+        public CubePool(CubeColorDataSO cubeColorDataSO)
+        {
+            _cubeColorDataSO = cubeColorDataSO;
+        }
 
         protected override void OnCreated(Cube cube)
         {
@@ -26,6 +38,7 @@ namespace Assets.Scripts.CubeModule
             base.OnSpawned(cube);
 
             cube.DeactivateRigidbody();
+            cube.ChangeMaterial(_cubeColorDataSO.GetRandomMaterial());
         }
 
         protected override void Reinitialize(Cube cube)

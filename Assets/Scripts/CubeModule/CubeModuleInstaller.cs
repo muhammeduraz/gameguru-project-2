@@ -1,5 +1,6 @@
 using Zenject;
 using UnityEngine;
+using Assets.Scripts.CubeModule.Data;
 
 namespace Assets.Scripts.CubeModule
 {
@@ -9,6 +10,7 @@ namespace Assets.Scripts.CubeModule
 
         [Header("References")]
         [SerializeField] private Cube _cubePrefab;
+        [SerializeField] private CubeColorDataSO _cubeColorDataSO;
 
         #endregion Variables
 
@@ -16,6 +18,7 @@ namespace Assets.Scripts.CubeModule
 
         public override void InstallBindings()
         {
+            Container.BindInstance(_cubeColorDataSO);
             Container.BindMemoryPool<Cube, CubePool>().FromComponentInNewPrefab(_cubePrefab).AsSingle();
             Container.BindInterfacesAndSelfTo<CubePlacer>().AsSingle();
         }

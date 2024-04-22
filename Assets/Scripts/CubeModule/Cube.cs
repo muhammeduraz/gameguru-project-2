@@ -26,6 +26,11 @@ namespace Assets.Scripts.CubeModule
 
         #region Functions
 
+        public void ChangeMaterial(Material material)
+        {
+            _meshRenderer.material = material;
+        }
+
         public void ActivateRigidbody()
         {
             _rigidbody.isKinematic = false;
