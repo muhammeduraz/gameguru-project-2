@@ -155,12 +155,9 @@ namespace Assets.Scripts.CubeModule
             }
 
             // Set new cube size
-            Vector3 newCubeSize =  GetNewCubeSize(differenceInX);
-            _currentCube.Size = newCubeSize;
-
+            _currentCube.Size = GetNewCubeSize(differenceInX);
             // Set new cube position
-            Vector3 newCubePosition = GetNewCubePosition(differenceInX);
-            _currentCube.Position = newCubePosition;
+            _currentCube.Position = GetNewCubePosition(differenceInX);
 
             // Create fall cube
             _cacheFallCube = _cubePool.Spawn();
@@ -168,16 +165,13 @@ namespace Assets.Scripts.CubeModule
             _cacheFallCube.ActivateRigidbodyAndDeactivateAsAsync();
 
             // Set fall cube size
-            Vector3 fallCubeSize = GetFallCubeSize();
-            _cacheFallCube.Size = fallCubeSize;
-
+            _cacheFallCube.Size = GetFallCubeSize();
             // Set fall cube position
-            Vector3 fallCubePosition = GetFallCubePosition(fallCubeSize.x, differenceInX);
-            _cacheFallCube.Position = fallCubePosition;
+            _cacheFallCube.Position = GetFallCubePosition(_cacheFallCube.Size.x, differenceInX);
 
-            _currentCubeSize = newCubeSize;
+            _currentCubeSize = _currentCube.Size;
 
-            if (newCubeSize.x <= _failSizeLimit)
+            if (_currentCube.Size.x <= _failSizeLimit)
             {
                 // Fail the game
                 _isActive = false;
