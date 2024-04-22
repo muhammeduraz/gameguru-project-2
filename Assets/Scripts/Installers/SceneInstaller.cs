@@ -4,6 +4,7 @@ using Assets.Scripts.InputModule;
 using Assets.Scripts.FinishModule;
 using Assets.Scripts.PlayerModule;
 using Assets.Scripts.CubeModule.Signals;
+using Assets.Scripts.PlayerModule.Signals;
 using Assets.Scripts.ParticleModule.Signals;
 
 namespace Assets.Scripts.Installers
@@ -16,6 +17,7 @@ namespace Assets.Scripts.Installers
         {
             CubeModuleSignalInstaller.Install(Container);
             InputModuleSignalInstaller.Install(Container);
+            PlayerModuleSignalInstaller.Install(Container);
             FinishModuleSignalInstaller.Install(Container);
             ParticleModuleSignalInstaller.Install(Container);
 
