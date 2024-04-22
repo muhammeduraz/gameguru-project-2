@@ -11,6 +11,7 @@ namespace Assets.Scripts.CubeModule
         [Header("References")]
         [SerializeField] private Cube _cubePrefab;
         [SerializeField] private CubeColorDataSO _cubeColorDataSO;
+        [SerializeField] private CubePlacerDataSO _cubePlacerDataSO;
 
         #endregion Variables
 
@@ -20,7 +21,7 @@ namespace Assets.Scripts.CubeModule
         {
             Container.BindInstance(_cubeColorDataSO);
             Container.BindMemoryPool<Cube, CubePool>().FromComponentInNewPrefab(_cubePrefab).AsSingle();
-            Container.BindInterfacesAndSelfTo<CubePlacer>().AsSingle();
+            Container.BindInterfacesAndSelfTo<CubePlacer>().AsSingle().WithArguments(_cubePlacerDataSO);
         }
 
         #endregion Functions

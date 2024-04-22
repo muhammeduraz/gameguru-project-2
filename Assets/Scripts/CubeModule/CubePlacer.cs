@@ -15,11 +15,7 @@ namespace Assets.Scripts.CubeModule
         private bool _isActive;
         private bool _isMovingRight;
 
-        private float _failSizeLimit;
         private float _currentZPosition;
-        private float _correctPlacementThreshold;
-
-        private float _movementSpeed;
         private float2 _movementRange;
 
         private Vector3 _currentCubeSize;
@@ -30,6 +26,7 @@ namespace Assets.Scripts.CubeModule
 
         private CubePool _cubePool;
         private SignalBus _signalBus;
+        private CubePlacerDataSO _cubePlacerDataSO;
 
         private CubePlacedSignal _cubePlacedSignal;
 
@@ -37,24 +34,20 @@ namespace Assets.Scripts.CubeModule
 
         #region Functions
 
-        public CubePlacer(SignalBus signalBus, CubePool cubePool, [Inject(Id = "InitialCube")] Cube initialCube)
+        public CubePlacer(SignalBus signalBus, CubePool cubePool, [Inject(Id = "InitialCube")] Cube initialCube, CubePlacerDataSO cubePlacerDataSO)
         {
             _isActive = true;
             _isMovingRight = true;
 
-            _failSizeLimit = 0.3f;
-            _currentZPosition = 5f;
-
-            _correctPlacementThreshold = 0.2f;
-
-            _movementSpeed = 5.0f;
-            _movementRange = new float2(-6.0f, 6.0f);
-
-            _currentCubeSize = initialCube.Size;
-
             _cubePool = cubePool;
             _signalBus = signalBus;
+            _cubePlacerDataSO = cubePlacerDataSO;
 
+            _currentZPosition = initialCube.Size.z;
+            _movementRange = cubePlacerDataSO.DefaultMovementRange;
+
+            _currentCubeSize = initialCube.Size;
+            
             _previousCube = initialCube;
 
             _cubePlacedSignal = new CubePlacedSignal();
@@ -112,7 +105,7 @@ namespace Assets.Scripts.CubeModule
 
         private void MoveCube(Vector3 targetPosition)
         {
-            _currentCube.Position = Vector3.MoveTowards(_currentCube.Position, targetPosition, _movementSpeed * Time.deltaTime);
+            _currentCube.Position = Vector3.MoveTowards(_currentCube.Position, targetPosition, _cubePlacerDataSO.MovementSpeed * Time.deltaTime);
         }
 
         private bool IsTargetPositionReached(Vector3 targetPosition)
@@ -140,7 +133,7 @@ namespace Assets.Scripts.CubeModule
         private void OnInputTapSignalFired()
         {
             float differenceInX = Mathf.Abs(_previousCube.Position.x - _currentCube.Position.x);
-            if (differenceInX <= _correctPlacementThreshold)
+            if (differenceInX <= _cubePlacerDataSO.CorrectPlacementThreshold)
                 OnPlacedCorrectly();
             else
                 OnPlaced();
@@ -181,7 +174,7 @@ namespace Assets.Scripts.CubeModule
             UpdateCurrentCubeSize();
             UpdateMovementRange();
 
-            if (_currentCube.Size.x <= _failSizeLimit)
+            if (_currentCube.Size.x <= _cubePlacerDataSO.FailSizeLimit)
             {
                 // Fail the game
                 _isActive = false;

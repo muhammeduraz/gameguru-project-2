@@ -66,6 +66,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _cubePrefab: {fileID: 5144160188863804348, guid: dfcf50e24f6300f448c84b37e58fccb4, type: 3}
   _cubeColorDataSO: {fileID: 11400000, guid: c0438560c6ea6a94eb97ad76e53e5538, type: 2}
+  _cubePlacerDataSO: {fileID: 11400000, guid: 30617c52d453cb8459967142ae6ffcbf, type: 2}
 --- !u!1 &8458448482906185717
 GameObject:
   m_ObjectHideFlags: 0
