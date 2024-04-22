@@ -24,7 +24,7 @@ namespace Assets.Scripts.CubeModule
         public MeshRenderer MeshRenderer { get => _meshRenderer; }
 
         #endregion Properties
-
+        
         #region Functions
 
         public void ChangeMaterial(Material material)
@@ -39,6 +39,7 @@ namespace Assets.Scripts.CubeModule
 
         public void DeactivateRigidbody()
         {
+            if (_rigidbody == null) return;
             _rigidbody.isKinematic = true;
         }
 
