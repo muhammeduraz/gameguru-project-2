@@ -21,6 +21,7 @@ namespace Assets.Scripts.CubeModule
 
         public Vector3 Size { get => transform.localScale; set => transform.localScale = value; }
         public Vector3 Position { get => transform.position; set => transform.position = value; }
+        public MeshRenderer MeshRenderer { get => _meshRenderer; }
 
         #endregion Properties
 

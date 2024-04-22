@@ -25,6 +25,7 @@ namespace Assets.Scripts.CubeModule
 
         private Cube _currentCube;
         private Cube _previousCube;
+        private Cube _cacheFallCube;
 
         private CubePool _cubePool;
         private SignalBus _signalBus;
@@ -46,7 +47,7 @@ namespace Assets.Scripts.CubeModule
             _isActive = true;
             _isMovingRight = true;
 
-            _failSizeLimit = 0.2f;
+            _failSizeLimit = 0.3f;
             _currentZPosition = 5f;
 
             _correctPlacementThreshold = 0.2f;
@@ -112,6 +113,8 @@ namespace Assets.Scripts.CubeModule
 
         private void SpawnCube()
         {
+            if (!_isActive) return;
+
             _currentCube = _cubePool.Spawn();
             _currentCube.Size = _currentCubeSize;
             _currentCube.Position = _movementRange.x * Vector3.right + _currentZPosition * Vector3.forward;
@@ -151,11 +154,27 @@ namespace Assets.Scripts.CubeModule
                 return;
             }
 
-            Vector3 newCubeSize =  GetNewSize(differenceInX);
+            // Set new cube size
+            Vector3 newCubeSize =  GetNewCubeSize(differenceInX);
             _currentCube.Size = newCubeSize;
 
-            Vector3 newCubePosition = GetNewPosition(differenceInX);
+            // Set new cube position
+            Vector3 newCubePosition = GetNewCubePosition(differenceInX);
             _currentCube.Position = newCubePosition;
+
+            _cacheFallCube = _cubePool.Spawn();
+            _cacheFallCube.ChangeMaterial(_currentCube.MeshRenderer.material);
+            _cacheFallCube.ActivateRigidbodyAndDeactivateAsAsync();
+            // Set fall cube size
+            float fallCubeSizeX = _previousCube.Size.x - newCubeSize.x;
+            Vector3 fallCubeSize = _previousCube.Size;
+            fallCubeSize.x = fallCubeSizeX;
+            _cacheFallCube.Size = fallCubeSize;
+            // Set fall cube position
+            float fallCubePositionX = _currentCube.Position.x - newCubeSize.x / 2f * Mathf.Sign(-differenceInX) - fallCubeSizeX / 2f * Mathf.Sign(-differenceInX);
+            Vector3 fallCubePosition = newCubePosition;
+            fallCubePosition.x = fallCubePositionX;
+            _cacheFallCube.Position = fallCubePosition;
 
             _currentCubeSize = newCubeSize;
 
@@ -178,7 +197,7 @@ namespace Assets.Scripts.CubeModule
             FireCubePlacedSignal(true);
         }
 
-        private Vector3 GetNewSize(float differenceInX)
+        private Vector3 GetNewCubeSize(float differenceInX)
         {
             float newCubeSizeX = _previousCube.Size.x - Mathf.Abs(differenceInX);
             Vector3 newCubeSize = _previousCube.Size;
@@ -187,7 +206,7 @@ namespace Assets.Scripts.CubeModule
             return newCubeSize;
         }
 
-        private Vector3 GetNewPosition(float differenceInX)
+        private Vector3 GetNewCubePosition(float differenceInX)
         {
             float newCenterX = _previousCube.Position.x + differenceInX / 2f;
             Vector3 newCubePosition = _currentCube.Position;
