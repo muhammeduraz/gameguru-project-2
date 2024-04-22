@@ -121,7 +121,7 @@ MonoBehaviour:
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-  m_CustomBlends: {fileID: 0}
+  m_CustomBlends: {fileID: 11400000, guid: e8f495560be36ef45a50712718606187, type: 2}
   m_CameraCutEvent:
     m_PersistentCalls:
       m_Calls: []
@@ -365,7 +365,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8023064226455503753}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.19625537, y: 3.4836235e-15, z: -6.9723914e-16, w: 0.98055285}
+  m_LocalRotation: {x: 0.19625536, y: -0.000000014611375, z: 0.0000000029244325, w: 0.98055285}
   m_LocalPosition: {x: 0, y: 4.67, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
