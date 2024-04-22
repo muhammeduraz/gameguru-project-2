@@ -1,6 +1,7 @@
 using Zenject;
-using Assets.Scripts.TimerModule;
 using Assets.Scripts.InputModule;
+using Assets.Scripts.TimerModule;
+using Assets.Scripts.AudioModule;
 using Assets.Scripts.FinishModule;
 using Assets.Scripts.PlayerModule;
 using Assets.Scripts.CubeModule.Signals;
@@ -22,7 +23,7 @@ namespace Assets.Scripts.Installers
             ParticleModuleSignalInstaller.Install(Container);
 
             Container.BindInterfacesAndSelfTo<Timer>().AsTransient();
-
+            Container.BindInterfacesAndSelfTo<AudioPlayer>().AsSingle();
             Container.BindInterfacesAndSelfTo<Player>().FromComponentInHierarchy().AsSingle();
         }
 
