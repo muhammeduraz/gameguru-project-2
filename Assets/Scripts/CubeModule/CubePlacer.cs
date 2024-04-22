@@ -14,10 +14,14 @@ namespace Assets.Scripts.CubeModule
         private bool _isActive;
         private bool _isMovingRight;
 
-        private float _currentCubeSize;
         private float _currentZPosition;
+        private float _offsetForDistanceCheck;
+        private float _correctPlacementThreshold;
 
+        private float _movementSpeed;
         private float2 _movementRange;
+
+        private Vector3 _currentCubeSize;
 
         private Cube _currentCube;
         private Cube _previousCube;
@@ -37,17 +41,25 @@ namespace Assets.Scripts.CubeModule
 
         #region Functions
 
-        public CubePlacer(SignalBus signalBus, CubePool cubePool)
+        public CubePlacer(SignalBus signalBus, CubePool cubePool, [Inject(Id = "InitialCube")] Cube initialCube)
         {
             _isActive = true;
+            _isMovingRight = true;
 
-            _currentCubeSize = 5f;
             _currentZPosition = 5f;
-            
-            _movementRange = new float2(-10.0f, 10.0f);
+
+            _offsetForDistanceCheck = 0.05f;
+            _correctPlacementThreshold = 0.2f;
+
+            _movementSpeed = 5.0f;
+            _movementRange = new float2(-7.0f, 7.0f);
+
+            _currentCubeSize = initialCube.Size;
 
             _cubePool = cubePool;
             _signalBus = signalBus;
+
+            _previousCube = initialCube;
 
             _cubePlacedSignal = new CubePlacedSignal();
         }
@@ -63,15 +75,11 @@ namespace Assets.Scripts.CubeModule
         {
             if (!_isActive) return;
 
-            Vector3 targetPosition = _currentZPosition * Vector3.forward + _movementRange.x * Vector3.right;
-            if (_isMovingRight)
-                targetPosition = _currentZPosition * Vector3.forward + _movementRange.y * Vector3.right;
+            Vector3 targetPosition = GetTargetPosition();
+            MoveCube(targetPosition);
 
-            _currentCube.transform.position = Vector3.MoveTowards(_currentCube.transform.position, targetPosition, 15.0f * Time.deltaTime);
-            if (_currentCube.transform.position == targetPosition)
-            {
+            if (IsTargetPositionReached(targetPosition))
                 _isMovingRight = !_isMovingRight;
-            }
         }
 
         public void Dispose()
@@ -83,22 +91,89 @@ namespace Assets.Scripts.CubeModule
             _signalBus = null;
         }
 
+        private Vector3 GetTargetPosition()
+        {
+            Vector3 targetPosition = _currentZPosition * Vector3.forward + _movementRange.x * Vector3.right;
+            if (_isMovingRight)
+                targetPosition = _currentZPosition * Vector3.forward + _movementRange.y * Vector3.right;
+
+            return targetPosition;
+        }
+
+        private void MoveCube(Vector3 targetPosition)
+        {
+            _currentCube.Position = Vector3.MoveTowards(_currentCube.Position, targetPosition, _movementSpeed * Time.deltaTime);
+        }
+
+        private bool IsTargetPositionReached(Vector3 targetPosition)
+        {
+            return Mathf.Abs(_currentCube.Position.x) > (Mathf.Abs(targetPosition.x) - _offsetForDistanceCheck);
+        }
+
         private void SpawnCube()
         {
             _currentCube = _cubePool.Spawn();
-            _currentCube.transform.localScale = new Vector3(_currentCubeSize, 1f, _currentCubeSize);
-            _currentCube.transform.position = _movementRange.x * Vector3.left + _currentZPosition * Vector3.forward;
+            _currentCube.Size = _currentCubeSize;
+            _currentCube.Position = _movementRange.x * Vector3.right + _currentZPosition * Vector3.forward;
+        }
+
+        private void FireCubePlacedSignal(bool correctly = false)
+        {
+            _cubePlacedSignal.Correctly = correctly;
+            _cubePlacedSignal.Cube = _currentCube;
+
+            _signalBus.Fire(_cubePlacedSignal);
         }
 
         private void OnInputTapSignalFired()
         {
-            _cubePlacedSignal.Cube = _currentCube;
-            _signalBus.Fire(_cubePlacedSignal);
+            float differenceInX = Mathf.Abs(_previousCube.Position.x - _currentCube.Position.x);
+            if (differenceInX <= _correctPlacementThreshold)
+                OnPlacedCorrectly();
+            else
+                OnPlaced();
 
-            _currentZPosition += 5.0f;
-
+            _currentZPosition += _previousCube.Size.z;
             _previousCube = _currentCube;
+            _isMovingRight = true;
+
             SpawnCube();
+        }
+
+        private void OnPlaced()
+        {
+            float differenceInX = _currentCube.Position.x - _previousCube.Position.x;
+            if (Mathf.Abs(differenceInX) >= _previousCube.Size.x)
+            {
+                _currentCube.ActivateRigidbody();
+                // Fail the game
+                return;
+            }
+
+            float newCenterX = _previousCube.Position.x + differenceInX / 2f;
+
+            Vector3 newCubePosition = _currentCube.Position;
+            newCubePosition.x = newCenterX;
+
+            float newCubeSizeX = _previousCube.Size.x - Mathf.Abs(differenceInX);
+            Vector3 newCubeSize = _previousCube.Size;
+            newCubeSize.x = newCubeSizeX;
+
+            _currentCubeSize = newCubeSize;
+
+            _currentCube.Position = newCubePosition;
+            _currentCube.Size = newCubeSize;
+
+            FireCubePlacedSignal();
+        }
+
+        private void OnPlacedCorrectly()
+        {
+            Vector3 currentCubePosition = _currentCube.Position;
+            currentCubePosition.x = _previousCube.Position.x;
+            _currentCube.Position = currentCubePosition;
+
+            FireCubePlacedSignal(true);
         }
 
         #endregion Functions

@@ -2077,7 +2077,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 4183238379651888100, guid: dfcf50e24f6300f448c84b37e58fccb4, type: 3}
       propertyPath: m_Name
-      value: Cube
+      value: InitialCube
       objectReference: {fileID: 0}
     - target: {fileID: 5507876146288780790, guid: dfcf50e24f6300f448c84b37e58fccb4, type: 3}
       propertyPath: m_LocalScale.x
@@ -2130,7 +2130,10 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 4183238379651888100, guid: dfcf50e24f6300f448c84b37e58fccb4, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1442467490}
   m_SourcePrefab: {fileID: 100100000, guid: dfcf50e24f6300f448c84b37e58fccb4, type: 3}
 --- !u!1 &604831775
 GameObject:
@@ -5057,6 +5060,40 @@ Transform:
   m_Children: []
   m_Father: {fileID: 995571690}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1442467487 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4183238379651888100, guid: dfcf50e24f6300f448c84b37e58fccb4, type: 3}
+  m_PrefabInstance: {fileID: 604436002}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1442467488 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5144160188863804348, guid: dfcf50e24f6300f448c84b37e58fccb4, type: 3}
+  m_PrefabInstance: {fileID: 604436002}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1442467487}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 63619393edfa4b344b019613b18c416c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1442467490
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1442467487}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0166d8ff8d905b048b2448179e1f5d11, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _components:
+  - {fileID: 1442467488}
+  _identifier: InitialCube
+  _useSceneContext: 0
+  _context: {fileID: 0}
+  _bindType: 0
 --- !u!1 &1462388309
 GameObject:
   m_ObjectHideFlags: 0

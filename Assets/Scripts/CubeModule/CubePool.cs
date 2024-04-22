@@ -24,6 +24,8 @@ namespace Assets.Scripts.CubeModule
         protected override void OnSpawned(Cube cube)
         {
             base.OnSpawned(cube);
+
+            cube.DeactivateRigidbody();
         }
 
         protected override void Reinitialize(Cube cube)
