@@ -4,6 +4,7 @@ using UnityEngine;
 using Unity.Mathematics;
 using Assets.Scripts.InputModule;
 using Assets.Scripts.CubeModule.Signals;
+using Assets.Scripts.PlayerModule.Signals;
 
 namespace Assets.Scripts.CubeModule
 {
@@ -34,12 +35,6 @@ namespace Assets.Scripts.CubeModule
 
         #endregion Variables
 
-        #region Properties
-
-
-
-        #endregion Properties
-
         #region Functions
 
         public CubePlacer(SignalBus signalBus, CubePool cubePool, [Inject(Id = "InitialCube")] Cube initialCube)
@@ -53,7 +48,7 @@ namespace Assets.Scripts.CubeModule
             _correctPlacementThreshold = 0.2f;
 
             _movementSpeed = 5.0f;
-            _movementRange = new float2(-7.0f, 7.0f);
+            _movementRange = new float2(-6.0f, 6.0f);
 
             _currentCubeSize = initialCube.Size;
 
@@ -70,6 +65,8 @@ namespace Assets.Scripts.CubeModule
             SpawnCube();
 
             _signalBus.Subscribe<InputTapSignal>(OnInputTapSignalFired);
+            _signalBus.Subscribe<PlayerMovementEndedSignal>(OnPlayerMovementEndedSignalFired);
+            _signalBus.Subscribe<PlayerMovementStartedSignal>(OnPlayerMovementStartedSignalFired);
         }
 
         public void Tick()
@@ -89,7 +86,19 @@ namespace Assets.Scripts.CubeModule
             _previousCube = null;
 
             _signalBus.Unsubscribe<InputTapSignal>(OnInputTapSignalFired);
+            _signalBus.Unsubscribe<PlayerMovementEndedSignal>(OnPlayerMovementEndedSignalFired);
+            _signalBus.Unsubscribe<PlayerMovementStartedSignal>(OnPlayerMovementStartedSignalFired);
             _signalBus = null;
+        }
+
+        private void OnPlayerMovementStartedSignalFired()
+        {
+            _signalBus.Unsubscribe<InputTapSignal>(OnInputTapSignalFired);
+        }
+
+        private void OnPlayerMovementEndedSignalFired()
+        {
+            _signalBus.Subscribe<InputTapSignal>(OnInputTapSignalFired);
         }
 
         private Vector3 GetTargetPosition()
@@ -169,7 +178,8 @@ namespace Assets.Scripts.CubeModule
             // Set fall cube position
             _cacheFallCube.Position = GetFallCubePosition(_cacheFallCube.Size.x, differenceInX);
 
-            _currentCubeSize = _currentCube.Size;
+            UpdateCurrentCubeSize();
+            UpdateMovementRange();
 
             if (_currentCube.Size.x <= _failSizeLimit)
             {
@@ -188,6 +198,18 @@ namespace Assets.Scripts.CubeModule
             _currentCube.Position = currentCubePosition;
 
             FireCubePlacedSignal(true);
+        }
+
+        private void UpdateCurrentCubeSize()
+        {
+            _currentCubeSize = _currentCube.Size;
+        }
+
+        private void UpdateMovementRange()
+        {
+            float rangeX = _currentCube.Position.x - _currentCube.Size.x - 1f;
+            float rangeY = _currentCube.Position.x + _currentCube.Size.x + 1f;
+            _movementRange = new float2(rangeX, rangeY);
         }
 
         private Vector3 GetNewCubeSize(float differenceInX)
