@@ -38,7 +38,7 @@ namespace Assets.Scripts.CanvasModule
         public async void Disappear()
         {
             await Fade(0f).AsyncWaitForCompletion();
-            await OnDisappear();
+            OnDisappear();
         }
 
         protected Tween Fade(float value, float duration = 0.25f, Ease ease = Ease.OutSine)

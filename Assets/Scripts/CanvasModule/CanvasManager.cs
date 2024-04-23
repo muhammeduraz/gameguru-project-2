@@ -9,16 +9,13 @@ namespace Assets.Scripts.CanvasModule
     {
         #region Variables
 
+        private IPanel _currentPanel;
+
         private CanvasGroup _canvasGroup;
+
         private List<IPanel> _panelList;
 
         #endregion Variables
-
-        #region Properties
-
-
-
-        #endregion Properties
 
         #region Functions
 
@@ -30,12 +27,34 @@ namespace Assets.Scripts.CanvasModule
 
         public void Initialize()
         {
-            
+            Appear(typeof(CanvasStartPanel));
         }
 
         public void Dispose()
         {
-            
+            _currentPanel = null;
+            _canvasGroup = null;
+            _panelList = null;
+        }
+
+        private IPanel GetPanel(Type panelType)
+        {
+            return _panelList.Find(panel => panel.GetType() == panelType);
+        }
+
+        public void Appear(Type panelType)
+        {
+            if (_currentPanel != null)
+                _currentPanel.Disappear();
+
+            _currentPanel = GetPanel(panelType);
+            if (_currentPanel != null)
+                _currentPanel.Appear();
+        }
+
+        public void DisappearAllPanels()
+        {
+            _panelList.ForEach(panel => panel.Disappear());
         }
 
         #endregion Functions

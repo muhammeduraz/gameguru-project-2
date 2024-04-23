@@ -1,3 +1,4 @@
+using Zenject;
 using UnityEngine;
 using DG.Tweening;
 using UnityEngine.UI;
@@ -9,6 +10,8 @@ namespace Assets.Scripts.CanvasModule
     {
         #region Variables
 
+        private SignalBus _signalBus;
+
         [Header("Components")]
         [SerializeField] protected Button _continueButton;
         [SerializeField] protected GameObject _successText;
@@ -16,6 +19,12 @@ namespace Assets.Scripts.CanvasModule
         #endregion Variables
 
         #region Functions
+
+        [Inject]
+        private void CanvasWinPanelMonoConstructor(SignalBus signalBus)
+        {
+            _signalBus = signalBus;
+        }
 
         public override void Initialize()
         {
@@ -31,6 +40,8 @@ namespace Assets.Scripts.CanvasModule
         {
             base.Dispose();
 
+            _signalBus = null;
+            _successText = null;
             _continueButton = null;
         }
 
@@ -39,12 +50,14 @@ namespace Assets.Scripts.CanvasModule
             await base.OnAppear();
             await _successText.transform.DOScale(1f, 0.25f).SetEase(Ease.OutBack).AsyncWaitForCompletion();
             await Task.Delay(500);
+
+            InitializeContinueButton();
             await _continueButton.transform.DOScale(1f, 0.25f).SetEase(Ease.OutBack).AsyncWaitForCompletion();
         }
 
         protected async override Task OnDisappear()
         {
-            _continueButton.enabled = false;
+            TerminateContinueButton();
             await base.OnDisappear();
 
             _successText.transform.localScale = Vector3.zero;
@@ -66,7 +79,8 @@ namespace Assets.Scripts.CanvasModule
 
         private void OnContinueButtonClicked()
         {
-            
+            _signalBus.Fire<ContinueButtonClickedSignal>();
+            TerminateContinueButton();
         }
 
         #endregion Functions
