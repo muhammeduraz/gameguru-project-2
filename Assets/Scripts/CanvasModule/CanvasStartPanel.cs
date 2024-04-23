@@ -29,10 +29,12 @@ namespace Assets.Scripts.CanvasModule
         {
             base.Initialize();
 
-            _tapToStartText.transform.localScale = Vector3.zero;
+            canvasGroup.alpha = 1.0f;
+            _tapToStartText.transform.localScale = Vector3.one;
+            _startButton.transform.localScale = Vector3.one;
+            InitializeStartButton();
 
-            _startButton.transform.localScale = Vector3.zero;
-            _startButton.enabled = false;
+            Appear();
         }
 
         public override void Dispose()
@@ -80,6 +82,7 @@ namespace Assets.Scripts.CanvasModule
         {
             _signalBus.Fire<StartButtonClickedSignal>();
             TerminateStartButton();
+            Disappear();
         }
 
         #endregion Functions

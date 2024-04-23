@@ -22,23 +22,41 @@ namespace Assets.Scripts.CanvasModule
         public virtual void Initialize()
         {
             canvasGroup.alpha = 0.0f;
+            Disappear();
         }
 
         public virtual void Dispose()
         {
+            _fadeTween = null;
             canvasGroup = null;
         }
 
-        public async void Appear()
+        public async void AppearAsync()
         {
+            gameObject.SetActive(true);
             await Fade(1f).AsyncWaitForCompletion();
             await OnAppear();
         }
 
-        public async void Disappear()
+        public void Appear()
+        {
+            gameObject.SetActive(true);
+            canvasGroup.alpha = 1.0f;
+            OnAppear();
+        }
+
+        public async void DisappearAsync()
         {
             await Fade(0f).AsyncWaitForCompletion();
             OnDisappear();
+            gameObject.SetActive(false);
+        }
+
+        public void Disappear()
+        {
+            canvasGroup.alpha = 0.0f;
+            OnDisappear();
+            gameObject.SetActive(false);
         }
 
         protected Tween Fade(float value, float duration = 0.25f, Ease ease = Ease.OutSine)

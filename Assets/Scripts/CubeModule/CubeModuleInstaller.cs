@@ -11,7 +11,7 @@ namespace Assets.Scripts.CubeModule
         [Header("References")]
         [SerializeField] private Cube _cubePrefab;
         [SerializeField] private CubeColorDataSO _cubeColorDataSO;
-        [SerializeField] private CubePlacerDataSO _cubePlacerDataSO;
+        [SerializeField] private CubePlacerSettingsSO _cubePlacerDataSO;
 
         #endregion Variables
 

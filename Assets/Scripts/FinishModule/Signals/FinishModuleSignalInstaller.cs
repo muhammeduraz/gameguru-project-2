@@ -8,6 +8,7 @@ namespace Assets.Scripts.FinishModule
 
         public override void InstallBindings()
         {
+            Container.DeclareSignal<GameFailSignal>();
             Container.DeclareSignal<FinishInteractSignal>();
         }
 

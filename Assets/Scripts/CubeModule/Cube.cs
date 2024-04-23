@@ -27,6 +27,11 @@ namespace Assets.Scripts.CubeModule
         
         #region Functions
 
+        public void ResetRotation()
+        {
+            transform.rotation = Quaternion.identity;
+        }
+
         public void ChangeMaterial(Material material)
         {
             _meshRenderer.material = material;

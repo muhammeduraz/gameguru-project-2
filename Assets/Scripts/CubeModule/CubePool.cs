@@ -8,6 +8,8 @@ namespace Assets.Scripts.CubeModule
     {
         #region Variables
 
+        private int x = 0;
+
         private int _maxAliveCubeCount = 15;
 
         private Cube _cacheCube;
@@ -43,21 +45,28 @@ namespace Assets.Scripts.CubeModule
         {
             base.OnSpawned(cube);
 
+            cube.name = x++.ToString();
+
             _cubeQueue.Enqueue(cube);
-
-            if (_cubeQueue.Count > _maxAliveCubeCount)
-            {
-                _cacheCube = _cubeQueue.Dequeue();
-                Despawn(_cacheCube);
-            }
-
+            cube.ResetRotation();
             cube.DeactivateRigidbody();
             cube.ChangeMaterial(_cubeColorDataSO.GetRandomMaterial());
+
+            DespawnIfPossible();
         }
 
         protected override void Reinitialize(Cube cube)
         {
             base.Reinitialize(cube);
+        }
+
+        private void DespawnIfPossible()
+        {
+            if (_cubeQueue.Count > _maxAliveCubeCount)
+            {
+                _cacheCube = _cubeQueue.Dequeue();
+                Despawn(_cacheCube);
+            }
         }
 
         #endregion Functions

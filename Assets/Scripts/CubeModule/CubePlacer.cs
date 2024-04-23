@@ -3,6 +3,7 @@ using Zenject;
 using UnityEngine;
 using Unity.Mathematics;
 using Assets.Scripts.InputModule;
+using Assets.Scripts.FinishModule;
 using Assets.Scripts.CubeModule.Signals;
 using Assets.Scripts.PlayerModule.Signals;
 
@@ -18,6 +19,7 @@ namespace Assets.Scripts.CubeModule
         private float _currentZPosition;
         private float2 _movementRange;
 
+        private Vector3 _initialCubeSize;
         private Vector3 _currentCubeSize;
 
         private Cube _currentCube;
@@ -26,7 +28,7 @@ namespace Assets.Scripts.CubeModule
 
         private CubePool _cubePool;
         private SignalBus _signalBus;
-        private CubePlacerDataSO _cubePlacerDataSO;
+        private CubePlacerSettingsSO _settings;
 
         private CubePlacedSignal _cubePlacedSignal;
 
@@ -34,21 +36,21 @@ namespace Assets.Scripts.CubeModule
 
         #region Functions
 
-        public CubePlacer(SignalBus signalBus, CubePool cubePool, [Inject(Id = "InitialCube")] Cube initialCube, CubePlacerDataSO cubePlacerDataSO)
+        public CubePlacer(SignalBus signalBus, CubePool cubePool, CubePlacerSettingsSO settings)
         {
-            _isActive = true;
+            _isActive = false;
             _isMovingRight = true;
 
             _cubePool = cubePool;
             _signalBus = signalBus;
-            _cubePlacerDataSO = cubePlacerDataSO;
+            _settings = settings;
 
-            _currentZPosition = initialCube.Size.z;
-            _movementRange = cubePlacerDataSO.DefaultMovementRange;
+            _initialCubeSize = _settings.InitialCubeSize;
 
-            _currentCubeSize = initialCube.Size;
-            
-            _previousCube = initialCube;
+            _currentZPosition = _settings.InitialCubeSize.z;
+            _movementRange = _settings.DefaultMovementRange;
+
+            _currentCubeSize = _initialCubeSize;
 
             _cubePlacedSignal = new CubePlacedSignal();
         }
@@ -56,6 +58,10 @@ namespace Assets.Scripts.CubeModule
         public void Initialize()
         {
             SpawnCube();
+            _currentCube.transform.position = Vector3.zero;
+
+            _previousCube = _currentCube;
+            _currentCube = null;
 
             _signalBus.Subscribe<InputTapSignal>(OnInputTapSignalFired);
             _signalBus.Subscribe<PlayerMovementEndedSignal>(OnPlayerMovementEndedSignalFired);
@@ -71,6 +77,31 @@ namespace Assets.Scripts.CubeModule
 
             if (IsTargetPositionReached(targetPosition))
                 _isMovingRight = !_isMovingRight;
+        }
+
+        public void Reinitialize()
+        {
+            if (_currentCube != null)
+                _currentCube.name = "TSDAS";
+            if (_currentCube != null/* && _currentCube.Size.x <= _settings.FailSizeLimit*/)
+            {
+                _currentCube.gameObject.SetActive(false);
+                _currentCube = null;
+            }
+
+            _movementRange = new float2(_previousCube.Position.x + _settings.DefaultMovementRange.x, _previousCube.Position.x + _settings.DefaultMovementRange.y);
+            _currentCubeSize = _initialCubeSize;
+            SpawnCube();
+        }
+
+        public void Enable()
+        {
+            _isActive = true;
+        }
+
+        public void Disable()
+        {
+            _isActive = false;
         }
 
         public void Dispose()
@@ -105,7 +136,7 @@ namespace Assets.Scripts.CubeModule
 
         private void MoveCube(Vector3 targetPosition)
         {
-            _currentCube.Position = Vector3.MoveTowards(_currentCube.Position, targetPosition, _cubePlacerDataSO.MovementSpeed * Time.deltaTime);
+            _currentCube.Position = Vector3.MoveTowards(_currentCube.Position, targetPosition, _settings.MovementSpeed * Time.deltaTime);
         }
 
         private bool IsTargetPositionReached(Vector3 targetPosition)
@@ -115,8 +146,6 @@ namespace Assets.Scripts.CubeModule
 
         private void SpawnCube()
         {
-            if (!_isActive) return;
-
             _currentCube = _cubePool.Spawn();
             _currentCube.Size = _currentCubeSize;
             _currentCube.Position = _movementRange.x * Vector3.right + _currentZPosition * Vector3.forward;
@@ -130,58 +159,64 @@ namespace Assets.Scripts.CubeModule
             _signalBus.Fire(_cubePlacedSignal);
         }
 
+        private void FireGameFailedSignal()
+        {
+            _signalBus.Fire<GameFailSignal>();
+        }
+
         private void OnInputTapSignalFired()
         {
+
             float differenceInX = Mathf.Abs(_previousCube.Position.x - _currentCube.Position.x);
-            if (differenceInX <= _cubePlacerDataSO.CorrectPlacementThreshold)
+            if (Mathf.Abs(differenceInX) >= _previousCube.Size.x && _currentCube.Size.x <= _previousCube.Size.x
+                || _currentCube.Size.x > _previousCube.Size.x && Mathf.Abs(differenceInX) >= _currentCube.Size.x / 2f + _previousCube.Size.x / 2f)
+            {
+                Disable();
+                FireGameFailedSignal();
+                _currentCube.ActivateRigidbodyAndDeactivateAsAsync();
+                return;
+            }
+
+            if (differenceInX <= _settings.CorrectPlacementThreshold)
                 OnPlacedCorrectly();
             else
                 OnPlaced();
-
-            _currentZPosition += _previousCube.Size.z;
-            _previousCube = _currentCube;
-            _isMovingRight = true;
-
-            SpawnCube();
         }
 
         private void OnPlaced()
         {
-            float differenceInX = _currentCube.Position.x - _previousCube.Position.x;
-            if (Mathf.Abs(differenceInX) >= _previousCube.Size.x)
+            if (_currentCube.Size.x <= _previousCube.Size.x || Mathf.Approximately(_currentCube.Size.x, _previousCube.Size.x))
             {
-                _isActive = false;
-                _currentCube.ActivateRigidbodyAndDeactivateAsAsync();
-                // Fail the game
-                return;
+                float differenceInX = _currentCube.Position.x - _previousCube.Position.x;
+
+                // Set new cube size
+                _currentCube.Size = GetNewCubeSize(differenceInX);
+                // Set new cube position
+                _currentCube.Position = GetNewCubePosition(differenceInX);
+
+                // Create fall cube
+                _cacheFallCube = _cubePool.Spawn();
+                _cacheFallCube.ChangeMaterial(_currentCube.MeshRenderer.material);
+                _cacheFallCube.ActivateRigidbodyAndDeactivateAsAsync();
+
+                // Set fall cube size
+                _cacheFallCube.Size = GetFallCubeSize();
+                // Set fall cube position
+                _cacheFallCube.Position = GetFallCubePosition(_cacheFallCube.Size.x, differenceInX);
+
+                UpdateCurrentCubeSize();
+                UpdateMovementRange();
             }
 
-            // Set new cube size
-            _currentCube.Size = GetNewCubeSize(differenceInX);
-            // Set new cube position
-            _currentCube.Position = GetNewCubePosition(differenceInX);
-
-            // Create fall cube
-            _cacheFallCube = _cubePool.Spawn();
-            _cacheFallCube.ChangeMaterial(_currentCube.MeshRenderer.material);
-            _cacheFallCube.ActivateRigidbodyAndDeactivateAsAsync();
-
-            // Set fall cube size
-            _cacheFallCube.Size = GetFallCubeSize();
-            // Set fall cube position
-            _cacheFallCube.Position = GetFallCubePosition(_cacheFallCube.Size.x, differenceInX);
-
-            UpdateCurrentCubeSize();
-            UpdateMovementRange();
-
-            if (_currentCube.Size.x <= _cubePlacerDataSO.FailSizeLimit)
+            if (_currentCube.Size.x <= _settings.FailSizeLimit)
             {
-                // Fail the game
-                _isActive = false;
+                Disable();
+                FireGameFailedSignal();
                 return;
             }
 
             FireCubePlacedSignal();
+            OnAfterPlacement();
         }
 
         private void OnPlacedCorrectly()
@@ -191,6 +226,16 @@ namespace Assets.Scripts.CubeModule
             _currentCube.Position = currentCubePosition;
 
             FireCubePlacedSignal(true);
+            OnAfterPlacement();
+        }
+
+        private void OnAfterPlacement()
+        {
+            _currentZPosition += _previousCube.Size.z;
+            _previousCube = _currentCube;
+            _isMovingRight = true;
+
+            SpawnCube();
         }
 
         private void UpdateCurrentCubeSize()

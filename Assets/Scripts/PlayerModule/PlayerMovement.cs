@@ -13,7 +13,8 @@ namespace Assets.Scripts.PlayerModule
         private Tween _tween;
         
         [Header("Settings")]
-        [SerializeField] private float _movementSpeed;
+        [SerializeField] private float _rotationDuration = 0.1f;
+        [SerializeField] private float _movementDuration = 0.2f;
 
         [Header("Components")]
         [SerializeField] private Transform _transform;
@@ -35,11 +36,11 @@ namespace Assets.Scripts.PlayerModule
         public async Task Move(Vector3 position)
         {
             _tween?.Kill();
-            _tween = _transform.DOMove(position, 0.5f).SetEase(Ease.Linear);
+            _tween = _transform.DOMove(position, _movementDuration).SetEase(Ease.Linear);
 
             Vector3 dir = position - _transform.position;
             Quaternion lookRotation = Quaternion.LookRotation(dir);
-            _transform.DORotateQuaternion(lookRotation, 0.1f);
+            _transform.DORotateQuaternion(lookRotation, _rotationDuration);
 
             await _tween.AsyncWaitForCompletion();
         }

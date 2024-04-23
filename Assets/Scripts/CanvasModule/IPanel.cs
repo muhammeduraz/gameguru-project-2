@@ -7,6 +7,9 @@ namespace Assets.Scripts.CanvasModule
         public void Appear();
         public void Disappear();
 
+        public void AppearAsync();
+        public void DisappearAsync();
+
         #endregion Functions
     }
 }

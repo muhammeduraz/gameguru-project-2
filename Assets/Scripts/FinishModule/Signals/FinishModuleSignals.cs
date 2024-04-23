@@ -7,5 +7,10 @@ namespace Assets.Scripts.FinishModule
 
     }
 
+    public struct GameFailSignal
+    { 
+    
+    }
+
     #endregion Signals
 }
