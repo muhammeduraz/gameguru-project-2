@@ -1,4 +1,5 @@
 using Zenject;
+using System.Collections.Generic;
 using Assets.Scripts.CubeModule.Data;
 
 namespace Assets.Scripts.CubeModule
@@ -7,6 +8,10 @@ namespace Assets.Scripts.CubeModule
     {
         #region Variables
 
+        private int _maxAliveCubeCount = 15;
+
+        private Cube _cacheCube;
+        private Queue<Cube> _cubeQueue;
         private CubeColorDataSO _cubeColorDataSO;
         
         #endregion Variables
@@ -15,6 +20,7 @@ namespace Assets.Scripts.CubeModule
 
         public CubePool(CubeColorDataSO cubeColorDataSO)
         {
+            _cubeQueue = new Queue<Cube>();
             _cubeColorDataSO = cubeColorDataSO;
         }
 
@@ -36,6 +42,14 @@ namespace Assets.Scripts.CubeModule
         protected override void OnSpawned(Cube cube)
         {
             base.OnSpawned(cube);
+
+            _cubeQueue.Enqueue(cube);
+
+            if (_cubeQueue.Count > _maxAliveCubeCount)
+            {
+                _cacheCube = _cubeQueue.Dequeue();
+                Despawn(_cacheCube);
+            }
 
             cube.DeactivateRigidbody();
             cube.ChangeMaterial(_cubeColorDataSO.GetRandomMaterial());

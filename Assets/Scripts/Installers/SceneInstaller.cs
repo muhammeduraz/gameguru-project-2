@@ -1,7 +1,6 @@
 using Zenject;
 using Assets.Scripts.InputModule;
 using Assets.Scripts.TimerModule;
-using Assets.Scripts.AudioModule;
 using Assets.Scripts.FinishModule;
 using Assets.Scripts.PlayerModule;
 using Assets.Scripts.CubeModule.Signals;
