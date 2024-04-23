@@ -1,6 +1,7 @@
 using System;
 using Zenject;
 using UnityEngine;
+using System.Collections.Generic;
 
 namespace Assets.Scripts.CanvasModule
 {
@@ -9,6 +10,7 @@ namespace Assets.Scripts.CanvasModule
         #region Variables
 
         private CanvasGroup _canvasGroup;
+        private List<IPanel> _panelList;
 
         #endregion Variables
 
@@ -20,9 +22,10 @@ namespace Assets.Scripts.CanvasModule
 
         #region Functions
 
-        public CanvasManager([Inject(Id = "MainCanvasGroup")] CanvasGroup canvasGroup)
+        public CanvasManager([Inject(Id = "MainCanvasGroup")] CanvasGroup canvasGroup, List<IPanel> panelList)
         {
             _canvasGroup = canvasGroup;
+            _panelList = panelList;
         }
 
         public void Initialize()

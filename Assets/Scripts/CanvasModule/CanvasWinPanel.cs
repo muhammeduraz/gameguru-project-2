@@ -1,5 +1,7 @@
 using UnityEngine;
+using DG.Tweening;
 using UnityEngine.UI;
+using System.Threading.Tasks;
 
 namespace Assets.Scripts.CanvasModule
 {
@@ -9,14 +11,9 @@ namespace Assets.Scripts.CanvasModule
 
         [Header("Components")]
         [SerializeField] protected Button _continueButton;
+        [SerializeField] protected GameObject _successText;
 
         #endregion Variables
-
-        #region Properties
-
-
-
-        #endregion Properties
 
         #region Functions
 
@@ -24,6 +21,9 @@ namespace Assets.Scripts.CanvasModule
         {
             base.Initialize();
 
+            _successText.transform.localScale = Vector3.zero;
+            
+            _continueButton.transform.localScale = Vector3.zero;
             _continueButton.enabled = false;
         }
 
@@ -34,20 +34,27 @@ namespace Assets.Scripts.CanvasModule
             _continueButton = null;
         }
 
-        protected override void OnAppear()
+        protected async override Task OnAppear()
         {
-
+            await base.OnAppear();
+            await _successText.transform.DOScale(1f, 0.25f).SetEase(Ease.OutBack).AsyncWaitForCompletion();
+            await Task.Delay(500);
+            await _continueButton.transform.DOScale(1f, 0.25f).SetEase(Ease.OutBack).AsyncWaitForCompletion();
         }
 
-        protected override void OnDisappear()
+        protected async override Task OnDisappear()
         {
+            _continueButton.enabled = false;
+            await base.OnDisappear();
 
+            _successText.transform.localScale = Vector3.zero;
+            _continueButton.transform.localScale = Vector3.zero;
         }
 
         private void InitializeContinueButton()
         {
             _continueButton.onClick.RemoveAllListeners();
-            _continueButton.onClick.AddListener(OnNextButtonClicked);
+            _continueButton.onClick.AddListener(OnContinueButtonClicked);
             _continueButton.enabled = true;
         }
 
@@ -57,7 +64,7 @@ namespace Assets.Scripts.CanvasModule
             _continueButton.onClick.RemoveAllListeners();
         }
 
-        private void OnNextButtonClicked()
+        private void OnContinueButtonClicked()
         {
             
         }

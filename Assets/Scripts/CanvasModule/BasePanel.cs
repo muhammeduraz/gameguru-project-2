@@ -2,6 +2,7 @@ using System;
 using Zenject;
 using UnityEngine;
 using DG.Tweening;
+using System.Threading.Tasks;
 
 namespace Assets.Scripts.CanvasModule
 {
@@ -16,12 +17,6 @@ namespace Assets.Scripts.CanvasModule
 
         #endregion Variables
 
-        #region Properties
-
-
-
-        #endregion Properties
-
         #region Functions
 
         public virtual void Initialize()
@@ -34,26 +29,27 @@ namespace Assets.Scripts.CanvasModule
             canvasGroup = null;
         }
 
-        public void Appear()
+        public async void Appear()
         {
-            OnAppear();
-            Fade(1f);
+            await Fade(1f).AsyncWaitForCompletion();
+            await OnAppear();
         }
 
-        public void Disappear()
+        public async void Disappear()
         {
-            OnDisappear();
-            Fade(0f);
+            await Fade(0f).AsyncWaitForCompletion();
+            await OnDisappear();
         }
 
-        protected void Fade(float value, float duration = 0.25f, Ease ease = Ease.OutSine)
+        protected Tween Fade(float value, float duration = 0.25f, Ease ease = Ease.OutSine)
         {
             _fadeTween?.Kill();
             _fadeTween = canvasGroup.DOFade(value, duration).SetEase(ease);
+            return _fadeTween;
         }
 
-        protected abstract void OnAppear();
-        protected abstract void OnDisappear();
+        protected async virtual Task OnAppear() { }
+        protected async virtual Task OnDisappear() { }
 
         #endregion Functions
     }
