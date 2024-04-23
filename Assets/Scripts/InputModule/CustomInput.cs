@@ -30,6 +30,8 @@ namespace Assets.Scripts.InputModule
 
         public CustomInput(Timer timer, SignalBus signalBus, CustomInputSettingsSO settings)
         {
+            _isActive = false;
+
             _timer = timer;
             _settings = settings;
             _signalBus = signalBus;
@@ -37,7 +39,7 @@ namespace Assets.Scripts.InputModule
 
         public void Initialize()
         {
-            _isActive = true;
+            
         }
 
         public void Tick()
@@ -61,6 +63,16 @@ namespace Assets.Scripts.InputModule
         public void Dispose()
         {
             _timer = null;
+        }
+
+        public void Enable()
+        {
+            _isActive = true;
+        }
+
+        public void Disable()
+        {
+            _isActive = false;
         }
 
         private void OnButtonDown()

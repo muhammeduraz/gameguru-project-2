@@ -25,6 +25,7 @@ namespace Assets.Scripts.Installers
             Container.BindInterfacesAndSelfTo<Timer>().AsTransient();
             Container.BindInterfacesAndSelfTo<CanvasManager>().AsSingle();
             Container.BindInterfacesAndSelfTo<Player>().FromComponentInHierarchy().AsSingle();
+            InputModuleInstaller.Install(Container);
         }
 
         #endregion Functions

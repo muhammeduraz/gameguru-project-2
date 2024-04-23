@@ -4,7 +4,7 @@ using Assets.Scripts.InputModule.Data;
 
 namespace Assets.Scripts.InputModule
 {
-    public class InputModuleInstaller : MonoInstaller<InputModuleInstaller>
+    public class InputModuleInstaller : Installer<InputModuleInstaller>
     {
         #region Variables
 
