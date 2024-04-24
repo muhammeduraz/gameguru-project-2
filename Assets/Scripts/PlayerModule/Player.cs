@@ -26,6 +26,7 @@ namespace Assets.Scripts.PlayerModule
         #region Properties
 
         public Transform Transform { get => _transform; }
+        public Vector3 Position { get => _transform.position; set => _transform.position = value; }
 
         #endregion Properties
 

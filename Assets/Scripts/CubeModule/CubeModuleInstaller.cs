@@ -20,7 +20,7 @@ namespace Assets.Scripts.CubeModule
         public override void InstallBindings()
         {
             Container.BindInstance(_cubeColorDataSO);
-            Container.BindMemoryPool<Cube, CubePool>().FromComponentInNewPrefab(_cubePrefab).AsSingle();
+            Container.BindMemoryPool<Cube, CubePool>().FromComponentInNewPrefab(_cubePrefab);
             Container.BindInterfacesAndSelfTo<CubePlacer>().AsSingle().WithArguments(_cubePlacerDataSO);
         }
 

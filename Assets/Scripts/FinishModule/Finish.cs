@@ -14,6 +14,12 @@ namespace Assets.Scripts.FinishModule
         [SerializeField] private Collider _collider;
 
         #endregion Variables
+        
+        #region Properties
+
+        public Vector3 Position { get => transform.position; set => transform.position = value; }
+
+        #endregion Properties
 
         #region Functions
 
