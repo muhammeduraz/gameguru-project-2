@@ -23,15 +23,9 @@ namespace Assets.Scripts.PlayerModule
 
         #region Functions
 
-        public void Initialize()
-        {
-            
-        }
+        public void Initialize() { }
 
-        public void Dispose()
-        {
-            
-        }
+        public void Dispose() { }
 
         public async Task Move(Vector3 position)
         {

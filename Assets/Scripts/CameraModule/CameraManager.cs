@@ -15,6 +15,13 @@ namespace Assets.Scripts.CameraModule
 
         #endregion Variables
 
+        #region Properties
+
+        public PlayerCamera PlayerCamera { get => _playerCamera; }
+        public OrbitalCamera OrbitalCamera { get => _orbitalCamera; }
+
+        #endregion Properties
+
         #region Functions
 
         public CameraManager(Player player, [Inject(Id = "MainCamera")] Camera mainCamera, PlayerCamera playerCamera, OrbitalCamera orbitalCamera)
@@ -24,10 +31,7 @@ namespace Assets.Scripts.CameraModule
             _orbitalCamera = orbitalCamera;
         }
 
-        public void Initialize()
-        {
-            
-        }
+        public void Initialize() { }
 
         public void Dispose()
         {

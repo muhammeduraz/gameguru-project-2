@@ -18,15 +18,9 @@ namespace Assets.Scripts.PlayerModule
 
         #region Functions
 
-        public void Initialize()
-        {
+        public void Initialize() { }
 
-        }
-
-        public void Dispose()
-        {
-
-        }
+        public void Dispose() { }
 
         public void PlayIdleAnimation()
         {
@@ -37,13 +31,22 @@ namespace Assets.Scripts.PlayerModule
         public void PlayRunAnimation()
         {
             _animator.SetBool(Run, true);
-            _animator.SetBool(Dance, false);
+        }
+
+        public void StopRunAnimation()
+        {
+            _animator.SetBool(Run, false);
         }
 
         public void PlayDanceAnimation()
         {
             _animator.SetBool(Run, false);
             _animator.SetBool(Dance, true);
+        }
+
+        public void StopDanceAnimation()
+        {
+            _animator.SetBool(Dance, false);
         }
 
         #endregion Functions

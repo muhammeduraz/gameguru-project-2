@@ -27,6 +27,7 @@ namespace Assets.Scripts.PlayerModule
 
         public Transform Transform { get => _transform; }
         public Vector3 Position { get => _transform.position; set => _transform.position = value; }
+        public PlayerAnimation PlayerAnimation { get => _playerAnimation; }
 
         #endregion Properties
 
@@ -68,7 +69,7 @@ namespace Assets.Scripts.PlayerModule
 
             _playerAnimation.PlayRunAnimation();
             await _playerMovement.Move(cube.transform.position);
-            _playerAnimation.PlayIdleAnimation();
+            _playerAnimation.StopRunAnimation();
             
             _signalBus.Fire<PlayerMovementEndedSignal>();
         }

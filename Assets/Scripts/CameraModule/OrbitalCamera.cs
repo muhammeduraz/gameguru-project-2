@@ -11,16 +11,14 @@ namespace Assets.Scripts.CameraModule
 
         private Tween _orbitalTween;
 
-        private SignalBus _signalBus;
         private CinemachineOrbitalTransposer _orbitalTransposer;
 
         #endregion Variables
 
         #region Functions
 
-        public OrbitalCamera(SignalBus signalBus, [Inject(Id = "OrbitalCamera")] CinemachineVirtualCamera baseCamera, Player player) : base(baseCamera, player)
+        public OrbitalCamera([Inject(Id = "OrbitalCamera")] CinemachineVirtualCamera baseCamera, Player player) : base(baseCamera, player)
         {
-            _signalBus = signalBus;
             _orbitalTransposer = baseCamera.GetCinemachineComponent<CinemachineOrbitalTransposer>();
         }
 
@@ -40,12 +38,12 @@ namespace Assets.Scripts.CameraModule
 
             _orbitalTween = null;
             _orbitalTransposer = null;
-
-            _signalBus = null;
         }
 
-        private void StartOrbitalCameraSequence()
+        public void StartOrbitalCameraSequence()
         {
+            _orbitalTransposer.m_XAxis.Value = 0f;
+
             _orbitalTween?.Kill();
             _orbitalTween = DOTween.To(() => _orbitalTransposer.m_XAxis.Value, x => _orbitalTransposer.m_XAxis.Value = x, 360f, 4f)
                 .SetRelative()
@@ -53,10 +51,9 @@ namespace Assets.Scripts.CameraModule
                 .SetLoops(-1);
         }
 
-        private void StopOrbitalCameraSequence()
+        public void StopOrbitalCameraSequence()
         {
             _orbitalTween?.Kill();
-            _orbitalTransposer.m_XAxis.Value = 0f;
         }
 
         #endregion Functions

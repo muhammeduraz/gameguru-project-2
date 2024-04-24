@@ -67,7 +67,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _rotationDuration: 0.1
-  _movementDuration: 0.4
+  _movementDuration: 0.3
   _transform: {fileID: 7282765906048620882}
 --- !u!114 &7611395825847606967
 MonoBehaviour:

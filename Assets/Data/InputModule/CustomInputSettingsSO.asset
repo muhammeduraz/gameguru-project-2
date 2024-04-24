@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9ba64b87901374345bc382cf2707414f, type: 3}
   m_Name: CustomInputSettingsSO
   m_EditorClassIdentifier: 
-  _tapTimeThreshold: 0.2
-  _tapDistanceThreshold: 10
+  _tapTimeThreshold: 0.3
+  _tapDistanceThreshold: 50

@@ -18,15 +18,9 @@ namespace Assets.Scripts.PlayerModule
 
         #region Functions
 
-        public void Initialize()
-        {
+        public void Initialize() { }
 
-        }
-
-        public void Dispose()
-        {
-
-        }
+        public void Dispose() { }
 
         private void OnTriggerEnter(Collider otherCollider)
         {
