@@ -82,8 +82,6 @@ namespace Assets.Scripts.CubeModule
         public void Reinitialize()
         {
             if (_currentCube != null)
-                _currentCube.name = "TSDAS";
-            if (_currentCube != null/* && _currentCube.Size.x <= _settings.FailSizeLimit*/)
             {
                 _currentCube.gameObject.SetActive(false);
                 _currentCube = null;

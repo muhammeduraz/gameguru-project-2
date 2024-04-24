@@ -10,8 +10,6 @@ namespace Assets.Scripts.AudioModule
     {
         #region Variables
 
-        private int _correctPlacementComboCount;
-
         private float _currentPitch;
 
         private AudioClip _audioClip;
@@ -30,7 +28,6 @@ namespace Assets.Scripts.AudioModule
             _audioPlayerDataSO = audioPlayerDataSO;
             _audioSourceManager = audioSourceManager;
 
-            _correctPlacementComboCount = 0;
             _currentPitch = _audioPlayerDataSO.DefaultPitch;
         }
 
@@ -47,7 +44,6 @@ namespace Assets.Scripts.AudioModule
 
         private void OnCubePlacedSignalFired(CubePlacedSignal cubePlacedSignal)
         {
-            UpdateComboCount(cubePlacedSignal.Correctly);
             UpdateAudioPitch(cubePlacedSignal.Correctly);
 
             if (!cubePlacedSignal.Correctly) return;
@@ -58,18 +54,6 @@ namespace Assets.Scripts.AudioModule
         private void PlayCorrectPlacementAudioClip()
         {
             _audioSourceManager.Play(_audioClip, _currentPitch);
-        }
-
-        private void UpdateComboCount(bool correctPlacement)
-        {
-            if (correctPlacement)
-            {
-                _correctPlacementComboCount++;
-            }
-            else
-            {
-                _correctPlacementComboCount = 0;
-            }
         }
 
         private void UpdateAudioPitch(bool correctPlacement)

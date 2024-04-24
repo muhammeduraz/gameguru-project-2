@@ -1,7 +1,6 @@
 using System;
 using Zenject;
 using UnityEngine;
-using DG.Tweening;
 using Assets.Scripts.PlayerModule;
 
 namespace Assets.Scripts.CameraModule
@@ -15,12 +14,6 @@ namespace Assets.Scripts.CameraModule
         private OrbitalCamera _orbitalCamera;
 
         #endregion Variables
-
-        #region Properties
-
-
-
-        #endregion Properties
 
         #region Functions
 

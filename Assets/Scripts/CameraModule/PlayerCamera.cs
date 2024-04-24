@@ -6,18 +6,6 @@ namespace Assets.Scripts.CameraModule
 {
     public class PlayerCamera : BaseCamera
     {
-        #region Variables
-
-
-
-        #endregion Variables
-
-        #region Properties
-
-
-
-        #endregion Properties
-
         #region Functions
 
         public PlayerCamera([Inject(Id = "PlayerCamera")] CinemachineVirtualCamera baseCamera, Player player) : base(baseCamera, player)

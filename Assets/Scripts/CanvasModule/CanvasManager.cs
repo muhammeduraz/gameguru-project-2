@@ -28,7 +28,7 @@ namespace Assets.Scripts.CanvasModule
 
         public void Initialize()
         {
-
+            _canvasGroup.alpha = 1;
         }
 
         public void Dispose()

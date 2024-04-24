@@ -16,12 +16,6 @@ namespace Assets.Scripts.PlayerModule
 
         #endregion Variables
 
-        #region Properties
-
-
-
-        #endregion Properties
-
         #region Functions
 
         public void Initialize()

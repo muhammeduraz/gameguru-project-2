@@ -13,12 +13,6 @@ namespace Assets.Scripts.CubeModule.Data
 
         #endregion Variables
 
-	    #region Properties
-
-        
-
-        #endregion Properties
-
         #region Functions
 
         public Material GetRandomMaterial()
