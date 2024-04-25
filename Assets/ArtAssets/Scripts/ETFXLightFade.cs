@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.Rendering.Universal;
 
 namespace EpicToonFX
 {
@@ -24,15 +25,16 @@ namespace EpicToonFX
                 print("No light object found on " + gameObject.name);
         }
 
-        // Update is called once per frame
         void Update()
         {
             if (gameObject.GetComponent<Light>())
             {
                 li.intensity -= initIntensity * (Time.deltaTime / life);
                 if (killAfterLife && li.intensity <= 0)
-                    //Destroy(gameObject);
-					Destroy(gameObject.GetComponent<Light>());
+                {
+                    Destroy(gameObject.GetComponent<UniversalAdditionalLightData>());
+                    Destroy(gameObject.GetComponent<Light>());
+                }
             }
         }
     }
