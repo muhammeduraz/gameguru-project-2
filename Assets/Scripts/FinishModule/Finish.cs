@@ -14,6 +14,7 @@ namespace Assets.Scripts.FinishModule
 
         [Header("Components")]
         [SerializeField] private Collider _collider;
+        [SerializeField] private float _confettiParticleWidth = 1.5f;
         [SerializeField] private float _confettiParticleHeight = 1.5f;
 
         #endregion Variables
@@ -34,7 +35,8 @@ namespace Assets.Scripts.FinishModule
 
         public void OnInteract()
         {
-            _signalBus.Fire(new ParticleRequestSignal(typeof(ConfettiParticle), transform.position + _confettiParticleHeight * Vector3.up));
+            _signalBus.Fire(new ParticleRequestSignal(typeof(ConfettiParticle), transform.position + _confettiParticleWidth * Vector3.right + _confettiParticleHeight * Vector3.up));
+            _signalBus.Fire(new ParticleRequestSignal(typeof(ConfettiParticle), transform.position + -1.0f * _confettiParticleWidth * Vector3.right + _confettiParticleHeight * Vector3.up));
             _signalBus.Fire<FinishInteractSignal>();
         }
 

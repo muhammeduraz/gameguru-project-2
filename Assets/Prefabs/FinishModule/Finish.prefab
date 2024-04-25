@@ -49,6 +49,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _collider: {fileID: 7208682638118420980}
+  _confettiParticleWidth: 3
   _confettiParticleHeight: 1.5
 --- !u!65 &7208682638118420980
 BoxCollider:
