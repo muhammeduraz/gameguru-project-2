@@ -96,6 +96,13 @@ namespace Assets.Scripts.CubeModule
             _signalBus = null;
         }
 
+        public void ScalePreviousCubeBackToInitialSize()
+        {
+            if (_previousCube == null) return;
+
+            _previousCube.Scale(_initialCubeSize, 0.25f);
+        }
+
         public void DisableCurrentCube()
         {
             if (_currentCube != null)

@@ -42,6 +42,7 @@ namespace Assets.Scripts.StateModule
 
             _customInput.Disable();
             _cubePlacer.DisableFallCube();
+            _cubePlacer.ScalePreviousCubeBackToInitialSize();
 
             _canvasManager.Appear(typeof(CanvasStartPanel));
         }

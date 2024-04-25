@@ -29,6 +29,11 @@ namespace Assets.Scripts.CubeModule
         
         #region Functions
 
+        public void Scale(Vector3 scale, float duration)
+        {
+            transform.DOScale(scale, duration).SetEase(Ease.OutCubic);
+        }
+
         public void ResetRotation()
         {
             transform.rotation = Quaternion.identity;
@@ -58,7 +63,7 @@ namespace Assets.Scripts.CubeModule
 
         public async void DisableAsLastCube()
         {
-            await transform.DOScale(0.0f, 0.3f).SetEase(Ease.InBack).AsyncWaitForCompletion();
+            await transform.DOScale(0.0f, 0.2f).SetEase(Ease.Flash).AsyncWaitForCompletion();
         }
 
         private async void DeactivateRigidbodyAsync()
