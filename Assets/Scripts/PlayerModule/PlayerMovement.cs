@@ -2,7 +2,8 @@ using System;
 using Zenject;
 using UnityEngine;
 using DG.Tweening;
-using System.Threading.Tasks;
+using Assets.Scripts.CubeModule;
+using System.Collections.Generic;
 
 namespace Assets.Scripts.PlayerModule
 {
@@ -10,7 +11,13 @@ namespace Assets.Scripts.PlayerModule
     {
         #region Variables
 
+        private bool _isMoving;
+
+        private Cube _previousCube;
+
         private Tween _tween;
+
+        private Queue<Vector3> _destinationQueue;
         
         [Header("Settings")]
         [SerializeField] private float _rotationDuration = 0.1f;
@@ -19,24 +26,83 @@ namespace Assets.Scripts.PlayerModule
         [Header("Components")]
         [SerializeField] private Transform _transform;
 
+        [Header("References")]
+        [SerializeField] private PlayerAnimation _playerAnimation;
+
         #endregion Variables
 
         #region Functions
 
-        public void Initialize() { }
+        public void Initialize() 
+        {
+            _isMoving = false;
 
-        public void Dispose() { }
+            _destinationQueue = new Queue<Vector3>();
+        }
 
-        public async Task Move(Vector3 position)
+        public void Dispose() 
         {
             _tween?.Kill();
-            _tween = _transform.DOMove(position, _movementDuration).SetEase(Ease.Linear);
+            _tween = null;
 
-            Vector3 dir = position - _transform.position;
-            Quaternion lookRotation = Quaternion.LookRotation(dir);
-            _transform.DORotateQuaternion(lookRotation, _rotationDuration);
+            _transform = null;
+        }
 
-            await _tween.AsyncWaitForCompletion();
+        private void OnMovementStart()
+        {
+            _isMoving = true;
+            _playerAnimation.PlayRunAnimation();
+        }
+
+        private void OnMovementEnd()
+        {
+            _isMoving = false;
+            _playerAnimation.PlayIdleAnimation();
+        }
+
+        public void AddDestination(Cube cube)
+        {
+            Vector3 destination = _transform.position;
+
+            if (_previousCube != null)
+            {
+                destination = new Vector3(cube.Position.x, _transform.position.y, _transform.position.z + _previousCube.Size.z / 2.0f);
+                _destinationQueue.Enqueue(destination);
+            }
+
+            destination = cube.transform.position;
+            _destinationQueue.Enqueue(destination);
+
+            StartMovementSequence();
+
+            _previousCube = cube;
+        }
+
+        public void StartMovementSequence()
+        {
+            if (_isMoving) return;
+
+            OnMovementStart();
+            Move();
+        }
+
+        public async void Move()
+        {
+            while (_destinationQueue.Count > 0)
+            {
+                Vector3 destination = _destinationQueue.Dequeue();
+
+                Vector3 dir = destination - _transform.position;
+                Quaternion lookRotation = Quaternion.LookRotation(dir);
+                _transform.DORotateQuaternion(lookRotation, _rotationDuration);
+
+                _tween?.Kill();
+                _tween = _transform.DOMove(destination, _movementDuration).SetEase(Ease.Linear);
+
+                await _tween.AsyncWaitForCompletion();
+            }
+
+            OnMovementEnd();
         }
 
         #endregion Functions

@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _failSizeLimit: 0.3
   _correctPlacementThreshold: 0.2
-  _movementSpeed: 10
+  _movementSpeed: 8
   _defaultMovementRange:
     x: -6
     y: 6

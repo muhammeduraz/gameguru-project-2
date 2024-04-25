@@ -4,7 +4,6 @@ using UnityEngine;
 using Assets.Scripts.CubeModule;
 using Assets.Scripts.FinishModule;
 using Assets.Scripts.CubeModule.Signals;
-using Assets.Scripts.PlayerModule.Signals;
 
 namespace Assets.Scripts.PlayerModule
 {
@@ -68,18 +67,13 @@ namespace Assets.Scripts.PlayerModule
 
         private void OnCubePlacedSignalFired(CubePlacedSignal cubePlacedSignal)
         {
-            MovePlayerToCube(cubePlacedSignal.Cube);
+            AddDestionationToPlayerMovement(cubePlacedSignal.Cube);
         }
 
-        private async void MovePlayerToCube(Cube cube)
+        private void AddDestionationToPlayerMovement(Cube cube)
         {
-            _signalBus.Fire<PlayerMovementStartedSignal>();
-
             _playerAnimation.PlayRunAnimation();
-            await _playerMovement.Move(cube.transform.position);
-            _playerAnimation.StopRunAnimation();
-            
-            _signalBus.Fire<PlayerMovementEndedSignal>();
+            _playerMovement.AddDestination(cube);
         }
 
         private void MovePlayerToSpace()

@@ -5,7 +5,6 @@ using Unity.Mathematics;
 using Assets.Scripts.InputModule;
 using Assets.Scripts.FinishModule;
 using Assets.Scripts.CubeModule.Signals;
-using Assets.Scripts.PlayerModule.Signals;
 
 namespace Assets.Scripts.CubeModule
 {
@@ -56,6 +55,9 @@ namespace Assets.Scripts.CubeModule
             _cubePlacedSignal = new CubePlacedSignal();
         }
 
+        public void Enable() => _isActive = true;
+        public void Disable() => _isActive = false;
+
         public void Initialize()
         {
             SpawnCube();
@@ -65,8 +67,6 @@ namespace Assets.Scripts.CubeModule
             _currentCube = null;
 
             _signalBus.Subscribe<InputTapSignal>(OnInputTapSignalFired);
-            _signalBus.Subscribe<PlayerMovementEndedSignal>(OnPlayerMovementEndedSignalFired);
-            _signalBus.Subscribe<PlayerMovementStartedSignal>(OnPlayerMovementStartedSignalFired);
         }
 
         public void Reinitialize()
@@ -87,6 +87,15 @@ namespace Assets.Scripts.CubeModule
                 _isMovingRight = !_isMovingRight;
         }
 
+        public void Dispose()
+        {
+            _currentCube = null;
+            _previousCube = null;
+
+            _signalBus.Unsubscribe<InputTapSignal>(OnInputTapSignalFired);
+            _signalBus = null;
+        }
+
         public void DisableCurrentCube()
         {
             if (_currentCube != null)
@@ -103,37 +112,6 @@ namespace Assets.Scripts.CubeModule
                 _fallCubeDisableStatus = false;
                 _cacheFallCube.DisableAsLastCube();
             }
-        }
-
-        public void Enable()
-        {
-            _isActive = true;
-        }
-
-        public void Disable()
-        {
-            _isActive = false;
-        }
-
-        public void Dispose()
-        {
-            _currentCube = null;
-            _previousCube = null;
-
-            _signalBus.Unsubscribe<InputTapSignal>(OnInputTapSignalFired);
-            _signalBus.Unsubscribe<PlayerMovementEndedSignal>(OnPlayerMovementEndedSignalFired);
-            _signalBus.Unsubscribe<PlayerMovementStartedSignal>(OnPlayerMovementStartedSignalFired);
-            _signalBus = null;
-        }
-
-        private void OnPlayerMovementStartedSignalFired()
-        {
-            _signalBus.Unsubscribe<InputTapSignal>(OnInputTapSignalFired);
-        }
-
-        private void OnPlayerMovementEndedSignalFired()
-        {
-            _signalBus.Subscribe<InputTapSignal>(OnInputTapSignalFired);
         }
 
         private Vector3 GetTargetPosition()
@@ -184,9 +162,6 @@ namespace Assets.Scripts.CubeModule
         {
             return ((Mathf.Abs(differenceInX) >= _previousCube.Size.x && _currentCube.Size.x <= _previousCube.Size.x)
                 || (_currentCube.Size.x > _previousCube.Size.x && Mathf.Abs(differenceInX) >= _currentCube.Size.x / 2f + _previousCube.Size.x / 2f));
-
-            //return Mathf.Abs(differenceInX) >= _previousCube.Size.x && _currentCube.Size.x <= _previousCube.Size.x
-            //    || _currentCube.Size.x > _previousCube.Size.x && Mathf.Abs(differenceInX) >= _currentCube.Size.x / 2f + _previousCube.Size.x / 2f;
         }
 
         private void OnInputTapSignalFired()
