@@ -2,6 +2,7 @@ using System;
 using Zenject;
 using UnityEngine;
 using Assets.Scripts.CubeModule;
+using Assets.Scripts.FinishModule;
 using Assets.Scripts.CubeModule.Signals;
 using Assets.Scripts.PlayerModule.Signals;
 
@@ -45,6 +46,7 @@ namespace Assets.Scripts.PlayerModule
             _playerAnimation.Initialize();
             _playerInteraction.Initialize();
 
+            _signalBus.Subscribe<GameFailSignal>(OnGameFailSignalFired);
             _signalBus.Subscribe<CubePlacedSignal>(OnCubePlacedSignalFired);
         }
 
@@ -54,8 +56,14 @@ namespace Assets.Scripts.PlayerModule
             _playerAnimation.Dispose();
             _playerInteraction.Dispose();
 
+            _signalBus.Unsubscribe<GameFailSignal>(OnGameFailSignalFired);
             _signalBus.Unsubscribe<CubePlacedSignal>(OnCubePlacedSignalFired);
             _signalBus = null;
+        }
+
+        private void OnGameFailSignalFired()
+        {
+            MovePlayerToSpace();
         }
 
         private void OnCubePlacedSignalFired(CubePlacedSignal cubePlacedSignal)
@@ -72,6 +80,11 @@ namespace Assets.Scripts.PlayerModule
             _playerAnimation.StopRunAnimation();
             
             _signalBus.Fire<PlayerMovementEndedSignal>();
+        }
+
+        private void MovePlayerToSpace()
+        {
+
         }
 
         #endregion Functions

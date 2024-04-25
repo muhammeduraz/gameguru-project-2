@@ -164,7 +164,6 @@ namespace Assets.Scripts.CubeModule
 
         private void OnInputTapSignalFired()
         {
-
             float differenceInX = Mathf.Abs(_previousCube.Position.x - _currentCube.Position.x);
             if (Mathf.Abs(differenceInX) >= _previousCube.Size.x && _currentCube.Size.x <= _previousCube.Size.x
                 || _currentCube.Size.x > _previousCube.Size.x && Mathf.Abs(differenceInX) >= _currentCube.Size.x / 2f + _previousCube.Size.x / 2f)
