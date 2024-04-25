@@ -65,17 +65,17 @@ namespace Assets.Scripts.PlayerModule
             Vector3 destination = _transform.position;
 
             if (_previousCube != null)
-            {
-                destination = new Vector3(cube.Position.x, _transform.position.y, _transform.position.z + _previousCube.Size.z / 2.0f);
-                _destinationQueue.Enqueue(destination);
-            }
+                destination = new Vector3(cube.Position.x, _transform.position.y, _previousCube.Position.z + _previousCube.Size.z / 2.0f);
+            else
+                destination = new Vector3(cube.Position.x, _transform.position.y, _transform.position.z + cube.Size.z / 2.0f);
+
+            _destinationQueue.Enqueue(destination);
+            _previousCube = cube;
 
             destination = cube.transform.position;
             _destinationQueue.Enqueue(destination);
 
             StartMovementSequence();
-
-            _previousCube = cube;
         }
 
         public void StartMovementSequence()
