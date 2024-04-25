@@ -54,7 +54,7 @@ namespace Assets.Scripts.StateModule
             _customInput.Disable();
             _finishManager.PlaceNewFinishLine();
 
-            _player.PlayerAnimation.PlayDanceAnimation();
+            _player.OnWinStateEnter();
 
             _cameraManager.OrbitalCamera.Activate();
             _cameraManager.OrbitalCamera.StartOrbitalCameraSequence();
@@ -66,7 +66,7 @@ namespace Assets.Scripts.StateModule
         {
             base.OnStateExit();
 
-            _player.PlayerAnimation.StopDanceAnimation();
+            _player.OnWinStateExit();
 
             _cameraManager.OrbitalCamera.StopOrbitalCameraSequence();
             _cameraManager.OrbitalCamera.Deactivate();

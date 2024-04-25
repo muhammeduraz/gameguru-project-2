@@ -17,13 +17,24 @@ namespace Assets.Scripts.CameraModule
         {
             base.Initialize();
 
-            baseCamera.m_Follow = cameraTarget;
-            baseCamera.m_LookAt = cameraTarget;
+            AttachCameraTarget();
         }
 
         public override void Dispose()
         {
             base.Dispose();
+        }
+
+        public void AttachCameraTarget()
+        {
+            baseCamera.m_Follow = cameraTarget;
+            baseCamera.m_LookAt = cameraTarget;
+        }
+
+        public void DetachCameraTarget(int durationInMilliseconds)
+        {
+            baseCamera.m_Follow = null;
+            baseCamera.m_LookAt = null;
         }
 
         #endregion Functions

@@ -10,6 +10,7 @@ namespace Assets.Scripts.CubeModule
 
         [Header("Settings")]
         [SerializeField] private float _failSizeLimit = 0.3f;
+        [SerializeField] private float _scaleDurationOnSpawn = 0.1f;
         [SerializeField] private float _correctPlacementThreshold = 0.2f;
 
         [SerializeField] private float _movementSpeed = 5.0f;
@@ -22,6 +23,7 @@ namespace Assets.Scripts.CubeModule
         #region Properties
 
         public float FailSizeLimit { get => _failSizeLimit; }
+        public float ScaleDurationOnSpawn { get => _scaleDurationOnSpawn; }
         public float CorrectPlacementThreshold { get => _correctPlacementThreshold; }
 
         public float MovementSpeed { get => _movementSpeed; }

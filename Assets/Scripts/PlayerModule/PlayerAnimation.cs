@@ -9,6 +9,7 @@ namespace Assets.Scripts.PlayerModule
         #region Variables
 
         private readonly int Run = Animator.StringToHash("Run");
+        private readonly int Idle = Animator.StringToHash("Idle");
         private readonly int Dance = Animator.StringToHash("Dance");
 
         [Header("Components")]
@@ -24,8 +25,13 @@ namespace Assets.Scripts.PlayerModule
 
         public void PlayIdleAnimation()
         {
-            _animator.SetBool(Run, false);
-            _animator.SetBool(Dance, false);
+            StopRunAnimation();
+            _animator.SetBool(Idle, true);
+        }
+
+        public void StopIdleAnimation()
+        {
+            _animator.SetBool(Idle, false);
         }
 
         public void PlayRunAnimation()
@@ -40,13 +46,7 @@ namespace Assets.Scripts.PlayerModule
 
         public void PlayDanceAnimation()
         {
-            _animator.SetBool(Run, false);
-            _animator.SetBool(Dance, true);
-        }
-
-        public void StopDanceAnimation()
-        {
-            _animator.SetBool(Dance, false);
+            _animator.SetTrigger(Dance);
         }
 
         #endregion Functions

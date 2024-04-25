@@ -34,6 +34,12 @@ namespace Assets.Scripts.CubeModule
 
         #endregion Variables
 
+        #region Properties
+
+        public Cube PreviousCube { get => _previousCube; }
+
+        #endregion Properties
+
         #region Functions
 
         public CubePlacer(SignalBus signalBus, CubePool cubePool, CubePlacerSettingsSO settings)
@@ -143,7 +149,8 @@ namespace Assets.Scripts.CubeModule
         private void SpawnCube()
         {
             _currentCube = _cubePool.Spawn();
-            _currentCube.Size = _currentCubeSize;
+            _currentCube.Size = Vector3.zero;
+            _currentCube.Scale(_currentCubeSize, _settings.ScaleDurationOnSpawn);
             _currentCube.Position = _movementRange.x * Vector3.right + _currentZPosition * Vector3.forward;
         }
 

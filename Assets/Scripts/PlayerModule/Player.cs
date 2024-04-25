@@ -26,7 +26,6 @@ namespace Assets.Scripts.PlayerModule
 
         public Transform Transform { get => _transform; }
         public Vector3 Position { get => _transform.position; set => _transform.position = value; }
-        public PlayerAnimation PlayerAnimation { get => _playerAnimation; }
 
         #endregion Properties
 
@@ -55,6 +54,37 @@ namespace Assets.Scripts.PlayerModule
 
             _signalBus.Unsubscribe<CubePlacedSignal>(OnCubePlacedSignalFired);
             _signalBus = null;
+        }
+
+        public void OnWinStateEnter()
+        {
+            _playerMovement.StopMovementSequence();
+            _playerAnimation.PlayDanceAnimation();
+        }
+
+        public void OnWinStateExit()
+        {
+            _playerAnimation.PlayIdleAnimation();
+        }
+
+        public void OnFailStateEnter()
+        {
+            _playerMovement.StopMovementSequence();
+            _playerMovement.FallRigidbody();
+        }
+
+        public void OnStartStateEnter(Cube cube)
+        {
+            ResetPlayer(cube);
+        }
+
+        public void ResetPlayer(Cube cube)
+        {
+            _playerMovement.ResetRigidbody();
+            _playerAnimation.PlayIdleAnimation();
+
+            if (cube != null)
+                _transform.position = cube.transform.position;
         }
 
         private void OnCubePlacedSignalFired(CubePlacedSignal cubePlacedSignal)

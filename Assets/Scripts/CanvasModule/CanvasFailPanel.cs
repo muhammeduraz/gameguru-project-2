@@ -48,11 +48,15 @@ namespace Assets.Scripts.CanvasModule
         protected async override Task OnAppear()
         {
             await base.OnAppear();
+
+            _failText.transform.localScale = Vector3.zero;
+            _retryButton.transform.localScale = Vector3.zero;
+
             await _failText.transform.DOScale(1f, 0.25f).SetEase(Ease.OutBack).AsyncWaitForCompletion();
-            await Task.Delay(500);
+            await Task.Delay(1500);
 
             InitializeRetryButton();
-            await _retryButton.transform.DOScale(1f, 0.25f).SetEase(Ease.OutBack).AsyncWaitForCompletion();
+            await _retryButton.transform.DOScale(1f, 0.5f).SetEase(Ease.OutBack).AsyncWaitForCompletion();
         }
 
         protected async override Task OnDisappear()

@@ -1,7 +1,6 @@
 using UnityEngine;
-using System.Threading.Tasks;
-using System;
 using DG.Tweening;
+using System.Threading.Tasks;
 
 namespace Assets.Scripts.CubeModule
 {

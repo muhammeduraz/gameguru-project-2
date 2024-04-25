@@ -69,6 +69,7 @@ MonoBehaviour:
   _rotationDuration: 0.1
   _movementDuration: 0.3
   _transform: {fileID: 7282765906048620882}
+  _rigidbody: {fileID: 5178125944383131352}
   _playerAnimation: {fileID: 7611395825847606967}
 --- !u!114 &7611395825847606967
 MonoBehaviour:
