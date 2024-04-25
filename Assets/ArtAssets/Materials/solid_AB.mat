@@ -26,7 +26,7 @@ Material:
   stringTagMap:
     RenderType: Transparent
   disabledShaderPasses:
-  - GRABPASS
+  - ALWAYS
   - DepthOnly
   - SHADOWCASTER
   m_LockedProperties: 
@@ -92,7 +92,7 @@ Material:
     - _SoftParticleFadeParams: {r: 0, g: 5, b: 0, a: 0}
     - _TintColor: {r: 0.5, g: 0.5, b: 0.5, a: 0.5}
   m_BuildTextureStacks: []
---- !u!114 &6376717341061012852
+--- !u!114 &1140694114371179025
 MonoBehaviour:
   m_ObjectHideFlags: 11
   m_CorrespondingSourceObject: {fileID: 0}
@@ -104,4 +104,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d0353a89b1f911e48b9e16bdc9f2e058, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  version: -1
+  version: 7

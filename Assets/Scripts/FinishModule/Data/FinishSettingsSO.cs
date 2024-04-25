@@ -8,7 +8,7 @@ namespace Assets.Scripts.FinishModule
         #region Variables
 
         [Header("Settings")]
-        [SerializeField] private float _finishLineDistance = 50.0f;
+        [SerializeField] private float _finishLineDistance = 47.5f;
 
         #endregion Variables
 

@@ -1,6 +1,8 @@
 using Zenject;
 using UnityEngine;
+using Assets.Scripts.ParticleModule;
 using Assets.Scripts.Interfaces.Interaction;
+using Assets.Scripts.ParticleModule.Signals;
 
 namespace Assets.Scripts.FinishModule
 {
@@ -12,6 +14,7 @@ namespace Assets.Scripts.FinishModule
 
         [Header("Components")]
         [SerializeField] private Collider _collider;
+        [SerializeField] private float _confettiParticleHeight = 1.5f;
 
         #endregion Variables
         
@@ -31,6 +34,7 @@ namespace Assets.Scripts.FinishModule
 
         public void OnInteract()
         {
+            _signalBus.Fire(new ParticleRequestSignal(typeof(ConfettiParticle), transform.position + _confettiParticleHeight * Vector3.up));
             _signalBus.Fire<FinishInteractSignal>();
         }
 
