@@ -41,8 +41,8 @@ namespace Assets.Scripts.AudioModule
 
         public void Dispose()
         {
-            _signalBus.Subscribe<GameWinSignal>(OnGameWinSignalFired);
-            _signalBus.Subscribe<GameFailSignal>(OnGameFailSignalFired);
+            _signalBus.Unsubscribe<GameWinSignal>(OnGameWinSignalFired);
+            _signalBus.Unsubscribe<GameFailSignal>(OnGameFailSignalFired);
             _signalBus.Unsubscribe<CubePlacedSignal>(OnCubePlacedSignalFired);
             _signalBus = null;
         }
