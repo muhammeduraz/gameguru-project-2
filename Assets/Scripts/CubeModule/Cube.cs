@@ -1,5 +1,7 @@
 using UnityEngine;
 using System.Threading.Tasks;
+using System;
+using DG.Tweening;
 
 namespace Assets.Scripts.CubeModule
 {
@@ -52,6 +54,11 @@ namespace Assets.Scripts.CubeModule
         {
             ActivateRigidbody();
             DeactivateRigidbodyAsync();
+        }
+
+        public async void DisableAsLastCube()
+        {
+            await transform.DOScale(0.0f, 0.3f).SetEase(Ease.InBack).AsyncWaitForCompletion();
         }
 
         private async void DeactivateRigidbodyAsync()

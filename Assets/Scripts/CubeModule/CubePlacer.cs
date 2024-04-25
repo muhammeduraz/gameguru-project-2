@@ -15,6 +15,7 @@ namespace Assets.Scripts.CubeModule
 
         private bool _isActive;
         private bool _isMovingRight;
+        private bool _fallCubeDisableStatus;
 
         private float _currentZPosition;
         private float2 _movementRange;
@@ -68,6 +69,13 @@ namespace Assets.Scripts.CubeModule
             _signalBus.Subscribe<PlayerMovementStartedSignal>(OnPlayerMovementStartedSignalFired);
         }
 
+        public void Reinitialize()
+        {
+            _movementRange = new float2(_previousCube.Position.x + _settings.DefaultMovementRange.x, _previousCube.Position.x + _settings.DefaultMovementRange.y);
+            _currentCubeSize = _initialCubeSize;
+            SpawnCube();
+        }
+
         public void Tick()
         {
             if (!_isActive) return;
@@ -79,17 +87,22 @@ namespace Assets.Scripts.CubeModule
                 _isMovingRight = !_isMovingRight;
         }
 
-        public void Reinitialize()
+        public void DisableCurrentCube()
         {
             if (_currentCube != null)
             {
-                _currentCube.gameObject.SetActive(false);
+                _currentCube.DisableAsLastCube();
                 _currentCube = null;
             }
+        }
 
-            _movementRange = new float2(_previousCube.Position.x + _settings.DefaultMovementRange.x, _previousCube.Position.x + _settings.DefaultMovementRange.y);
-            _currentCubeSize = _initialCubeSize;
-            SpawnCube();
+        public void DisableFallCube()
+        {
+            if (_cacheFallCube != null && _fallCubeDisableStatus)
+            {
+                _fallCubeDisableStatus = false;
+                _cacheFallCube.DisableAsLastCube();
+            }
         }
 
         public void Enable()
@@ -162,58 +175,103 @@ namespace Assets.Scripts.CubeModule
             _signalBus.Fire<GameFailSignal>();
         }
 
+        private bool DoesCubePlacedCorrectly(float differenceInX)
+        {
+            return differenceInX <= _settings.CorrectPlacementThreshold;
+        }
+
+        private bool DoesCurrentAndPreviousCubesAlign(float differenceInX)
+        {
+            return ((Mathf.Abs(differenceInX) >= _previousCube.Size.x && _currentCube.Size.x <= _previousCube.Size.x)
+                || (_currentCube.Size.x > _previousCube.Size.x && Mathf.Abs(differenceInX) >= _currentCube.Size.x / 2f + _previousCube.Size.x / 2f));
+
+            //return Mathf.Abs(differenceInX) >= _previousCube.Size.x && _currentCube.Size.x <= _previousCube.Size.x
+            //    || _currentCube.Size.x > _previousCube.Size.x && Mathf.Abs(differenceInX) >= _currentCube.Size.x / 2f + _previousCube.Size.x / 2f;
+        }
+
         private void OnInputTapSignalFired()
         {
             float differenceInX = Mathf.Abs(_previousCube.Position.x - _currentCube.Position.x);
-            if (Mathf.Abs(differenceInX) >= _previousCube.Size.x && _currentCube.Size.x <= _previousCube.Size.x
-                || _currentCube.Size.x > _previousCube.Size.x && Mathf.Abs(differenceInX) >= _currentCube.Size.x / 2f + _previousCube.Size.x / 2f)
+
+            bool doesCurrentAndPreviousCubesAlign = DoesCurrentAndPreviousCubesAlign(differenceInX);
+            if (doesCurrentAndPreviousCubesAlign)
             {
-                Disable();
-                FireGameFailedSignal();
-                _currentCube.ActivateRigidbodyAndDeactivateAsAsync();
+                OnCubeDoesNotAlignWithPreviousOne();
                 return;
             }
 
-            if (differenceInX <= _settings.CorrectPlacementThreshold)
+            bool doesCubePlacedCorrectly = DoesCubePlacedCorrectly(differenceInX);
+            if (doesCubePlacedCorrectly)
                 OnPlacedCorrectly();
             else
                 OnPlaced();
         }
 
+        private bool DoesCurrentCubeSizeFallsUnderFailLimit()
+        {
+            return _currentCube.Size.x <= _settings.FailSizeLimit;
+        }
+
+        private bool IsCurrentCubeIsSmallerOrEqualThanPreviousOne()
+        {
+            return _currentCube.Size.x <= _previousCube.Size.x || Mathf.Approximately(_currentCube.Size.x, _previousCube.Size.x);
+        }
+
+        private void HandleCubePlacement()
+        {
+            float differenceInX = _currentCube.Position.x - _previousCube.Position.x;
+
+            // Set new cube size
+            _currentCube.Size = GetNewCubeSize(differenceInX);
+            // Set new cube position
+            _currentCube.Position = GetNewCubePosition(differenceInX);
+
+            // Create fall cube
+            _cacheFallCube = _cubePool.Spawn();
+            _cacheFallCube.ChangeMaterial(_currentCube.MeshRenderer.material);
+            _cacheFallCube.ActivateRigidbodyAndDeactivateAsAsync();
+
+            // Set fall cube size
+            _cacheFallCube.Size = GetFallCubeSize();
+            // Set fall cube position
+            _cacheFallCube.Position = GetFallCubePosition(_cacheFallCube.Size.x, differenceInX);
+
+            UpdateCurrentCubeSize();
+            UpdateMovementRange();
+        }
+
         private void OnPlaced()
         {
-            if (_currentCube.Size.x <= _previousCube.Size.x || Mathf.Approximately(_currentCube.Size.x, _previousCube.Size.x))
+            bool isCurrentCubeIsSmallerOrEqualThanPreviousOne = IsCurrentCubeIsSmallerOrEqualThanPreviousOne();
+            if (isCurrentCubeIsSmallerOrEqualThanPreviousOne)
+                HandleCubePlacement();
+
+            bool doesCurrentCubeSizeFallsUnderFailLimit = DoesCurrentCubeSizeFallsUnderFailLimit();
+            if (doesCurrentCubeSizeFallsUnderFailLimit)
             {
-                float differenceInX = _currentCube.Position.x - _previousCube.Position.x;
-
-                // Set new cube size
-                _currentCube.Size = GetNewCubeSize(differenceInX);
-                // Set new cube position
-                _currentCube.Position = GetNewCubePosition(differenceInX);
-
-                // Create fall cube
-                _cacheFallCube = _cubePool.Spawn();
-                _cacheFallCube.ChangeMaterial(_currentCube.MeshRenderer.material);
-                _cacheFallCube.ActivateRigidbodyAndDeactivateAsAsync();
-
-                // Set fall cube size
-                _cacheFallCube.Size = GetFallCubeSize();
-                // Set fall cube position
-                _cacheFallCube.Position = GetFallCubePosition(_cacheFallCube.Size.x, differenceInX);
-
-                UpdateCurrentCubeSize();
-                UpdateMovementRange();
-            }
-
-            if (_currentCube.Size.x <= _settings.FailSizeLimit)
-            {
-                Disable();
-                FireGameFailedSignal();
+                OnSizeFallsUnderFailLimit();
                 return;
             }
 
             FireCubePlacedSignal();
             OnAfterPlacement();
+        }
+
+        private void OnSizeFallsUnderFailLimit()
+        {
+            Disable();
+            _cacheFallCube = _currentCube;
+            _currentCube = null;
+            _fallCubeDisableStatus = true;
+            FireGameFailedSignal();
+        }
+
+        private void OnCubeDoesNotAlignWithPreviousOne()
+        {
+            Disable();
+            _currentCube.ActivateRigidbodyAndDeactivateAsAsync();
+            _currentCube = null;
+            FireGameFailedSignal();
         }
 
         private void OnPlacedCorrectly()
@@ -228,8 +286,8 @@ namespace Assets.Scripts.CubeModule
 
         private void OnAfterPlacement()
         {
-            _currentZPosition += _previousCube.Size.z;
             _previousCube = _currentCube;
+            _currentZPosition += _previousCube.Size.z;
             _isMovingRight = true;
 
             SpawnCube();
