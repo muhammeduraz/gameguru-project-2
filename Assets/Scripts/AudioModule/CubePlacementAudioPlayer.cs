@@ -1,6 +1,7 @@
 using System;
 using Zenject;
 using UnityEngine;
+using Assets.Scripts.FinishModule;
 using Assets.Scripts.AudioModule.Data;
 using Assets.Scripts.CubeModule.Signals;
 
@@ -33,13 +34,32 @@ namespace Assets.Scripts.AudioModule
 
         public void Initialize()
         {
+            _signalBus.Subscribe<GameWinSignal>(OnGameWinSignalFired);
+            _signalBus.Subscribe<GameFailSignal>(OnGameFailSignalFired);
             _signalBus.Subscribe<CubePlacedSignal>(OnCubePlacedSignalFired);
         }
 
         public void Dispose()
         {
+            _signalBus.Subscribe<GameWinSignal>(OnGameWinSignalFired);
+            _signalBus.Subscribe<GameFailSignal>(OnGameFailSignalFired);
             _signalBus.Unsubscribe<CubePlacedSignal>(OnCubePlacedSignalFired);
             _signalBus = null;
+        }
+
+        private void OnGameWinSignalFired()
+        {
+            ResetPitch();
+        }
+
+        private void OnGameFailSignalFired()
+        {
+            ResetPitch();
+        }
+
+        private void ResetPitch()
+        {
+            _currentPitch = _audioPlayerDataSO.DefaultPitch;
         }
 
         private void OnCubePlacedSignalFired(CubePlacedSignal cubePlacedSignal)

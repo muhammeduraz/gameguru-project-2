@@ -37,7 +37,7 @@ namespace Assets.Scripts.FinishModule
         {
             _signalBus.Fire(new ParticleRequestSignal(typeof(ConfettiParticle), transform.position + _confettiParticleWidth * Vector3.right + _confettiParticleHeight * Vector3.up));
             _signalBus.Fire(new ParticleRequestSignal(typeof(ConfettiParticle), transform.position + -1.0f * _confettiParticleWidth * Vector3.right + _confettiParticleHeight * Vector3.up));
-            _signalBus.Fire<FinishInteractSignal>();
+            _signalBus.Fire<GameWinSignal>();
         }
 
         public void Enable()

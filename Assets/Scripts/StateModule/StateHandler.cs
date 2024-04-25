@@ -48,7 +48,7 @@ namespace Assets.Scripts.StateModule
             ChangeState(typeof(StartState));
 
             _signalBus.Subscribe<GameFailSignal>(OnGameFailSignalFired);
-            _signalBus.Subscribe<FinishInteractSignal>(OnFinishInteractSignalFired);
+            _signalBus.Subscribe<GameWinSignal>(OnFinishInteractSignalFired);
             _signalBus.Subscribe<StartButtonClickedSignal>(OnStartButtonClickedSignalFired);
             _signalBus.Subscribe<RetryButtonClickedSignal>(OnRetryButtonClickedSignalFired);
             _signalBus.Subscribe<ContinueButtonClickedSignal>(OnContinueButtonClickedSignalFired);
@@ -66,7 +66,7 @@ namespace Assets.Scripts.StateModule
             _stateList = null;
 
             _signalBus.Unsubscribe<GameFailSignal>(OnGameFailSignalFired);
-            _signalBus.Unsubscribe<FinishInteractSignal>(OnFinishInteractSignalFired);
+            _signalBus.Unsubscribe<GameWinSignal>(OnFinishInteractSignalFired);
             _signalBus.Unsubscribe<StartButtonClickedSignal>(OnStartButtonClickedSignalFired);
             _signalBus.Unsubscribe<RetryButtonClickedSignal>(OnRetryButtonClickedSignalFired);
             _signalBus.Unsubscribe<ContinueButtonClickedSignal>(OnContinueButtonClickedSignalFired);
