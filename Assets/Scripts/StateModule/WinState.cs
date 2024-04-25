@@ -49,6 +49,8 @@ namespace Assets.Scripts.StateModule
             base.OnStateEnter();
 
             _cubePlacer.Disable();
+            _cubePlacer.DisableCurrentCube();
+
             _customInput.Disable();
             _finishManager.PlaceNewFinishLine();
 

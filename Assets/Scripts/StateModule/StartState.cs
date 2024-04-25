@@ -1,6 +1,7 @@
 using Assets.Scripts.InputModule;
 using Assets.Scripts.CanvasModule;
 using Assets.Scripts.PlayerModule;
+using Assets.Scripts.CubeModule;
 
 namespace Assets.Scripts.StateModule
 {
@@ -9,6 +10,7 @@ namespace Assets.Scripts.StateModule
         #region Variables
 
         private Player _player;
+        private CubePlacer _cubePlacer;
         private CustomInput _customInput;
         private CanvasManager _canvasManager;
 
@@ -16,9 +18,10 @@ namespace Assets.Scripts.StateModule
 
         #region Functions
 
-        public StartState(Player player, CustomInput customInput, CanvasManager canvasManager) : base()
+        public StartState(Player player, CubePlacer cubePlacer, CustomInput customInput, CanvasManager canvasManager) : base()
         {
             _player = player;
+            _cubePlacer = cubePlacer;
             _customInput = customInput;
             _canvasManager = canvasManager;
         }
@@ -28,6 +31,7 @@ namespace Assets.Scripts.StateModule
             base.Dispose();
 
             _player = null;
+            _cubePlacer = null;
             _customInput = null;
             _canvasManager = null;
         }
@@ -37,6 +41,8 @@ namespace Assets.Scripts.StateModule
             base.OnStateEnter();
 
             _customInput.Disable();
+            _cubePlacer.DisableFallCube();
+
             _canvasManager.Appear(typeof(CanvasStartPanel));
         }
 
