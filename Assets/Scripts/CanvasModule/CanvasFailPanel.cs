@@ -70,6 +70,8 @@ namespace Assets.Scripts.CanvasModule
 
         private void InitializeRetryButton()
         {
+            if (_retryButton == null) return;
+
             _retryButton.onClick.RemoveAllListeners();
             _retryButton.onClick.AddListener(OnRetryButtonClicked);
             _retryButton.enabled = true;

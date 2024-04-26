@@ -46,7 +46,7 @@ namespace Assets.Scripts.StateModule
 
             _customInput.Disable();
 
-            _player.ResetPlayer(_cubePlacer.PreviousCube);
+            _player.OnStartStateEnter(_cubePlacer.PreviousCube);
 
             _cameraManager.PlayerCamera.AttachCameraTarget();
 

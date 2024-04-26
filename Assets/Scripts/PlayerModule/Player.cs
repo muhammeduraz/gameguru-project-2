@@ -69,18 +69,22 @@ namespace Assets.Scripts.PlayerModule
 
         public void OnFailStateEnter()
         {
+            _playerInteraction.Disable();
             _playerMovement.StopMovementSequence();
             _playerMovement.FallRigidbody();
         }
 
         public void OnStartStateEnter(Cube cube)
         {
+            _playerInteraction.Enable();
             ResetPlayer(cube);
         }
 
-        public void ResetPlayer(Cube cube)
+        private void ResetPlayer(Cube cube)
         {
+            _playerMovement.ResetDestinationData(cube);
             _playerMovement.ResetRigidbody();
+
             _playerAnimation.PlayIdleAnimation();
 
             if (cube != null)

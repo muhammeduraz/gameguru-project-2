@@ -64,6 +64,9 @@ namespace Assets.Scripts.CubeModule
         public void Enable() => _isActive = true;
         public void Disable() => _isActive = false;
 
+        public void EnableInput() => _signalBus.Subscribe<InputTapSignal>(OnInputTapSignalFired);
+        public void DisableInput() => _signalBus.TryUnsubscribe<InputTapSignal>(OnInputTapSignalFired);
+
         public void Initialize()
         {
             SpawnCube();
@@ -71,8 +74,6 @@ namespace Assets.Scripts.CubeModule
 
             _previousCube = _currentCube;
             _currentCube = null;
-
-            _signalBus.Subscribe<InputTapSignal>(OnInputTapSignalFired);
         }
 
         public void Reinitialize()
@@ -80,6 +81,7 @@ namespace Assets.Scripts.CubeModule
             _movementRange = new float2(_previousCube.Position.x + _settings.DefaultMovementRange.x, _previousCube.Position.x + _settings.DefaultMovementRange.y);
             _currentCubeSize = _initialCubeSize;
             SpawnCube();
+            EnableInput();
         }
 
         public void Tick()
@@ -98,7 +100,7 @@ namespace Assets.Scripts.CubeModule
             _currentCube = null;
             _previousCube = null;
 
-            _signalBus.Unsubscribe<InputTapSignal>(OnInputTapSignalFired);
+            DisableInput();
             _signalBus = null;
         }
 
@@ -160,11 +162,6 @@ namespace Assets.Scripts.CubeModule
             _cubePlacedSignal.Cube = _currentCube;
 
             _signalBus.Fire(_cubePlacedSignal);
-        }
-
-        private void FireGameFailedSignal()
-        {
-            _signalBus.Fire<GameFailSignal>();
         }
 
         private bool DoesCubePlacedCorrectly(float differenceInX)
@@ -248,19 +245,23 @@ namespace Assets.Scripts.CubeModule
 
         private void OnSizeFallsUnderFailLimit()
         {
+            FireCubePlacedSignal(false);
+            DisableInput();
+
             Disable();
             _cacheFallCube = _currentCube;
             _currentCube = null;
             _fallCubeDisableStatus = true;
-            FireGameFailedSignal();
         }
 
         private void OnCubeDoesNotAlignWithPreviousOne()
         {
+            FireCubePlacedSignal(false);
+            DisableInput();
+
             Disable();
             _currentCube.ActivateRigidbodyAndDeactivateAsAsync();
             _currentCube = null;
-            FireGameFailedSignal();
         }
 
         private void OnPlacedCorrectly()

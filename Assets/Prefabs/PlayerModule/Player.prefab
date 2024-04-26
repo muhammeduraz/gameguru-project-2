@@ -68,6 +68,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _rotationDuration: 0.1
   _movementDuration: 0.3
+  _cubeSettings: {fileID: 11400000, guid: 30617c52d453cb8459967142ae6ffcbf, type: 2}
   _transform: {fileID: 7282765906048620882}
   _rigidbody: {fileID: 5178125944383131352}
   _playerAnimation: {fileID: 7611395825847606967}

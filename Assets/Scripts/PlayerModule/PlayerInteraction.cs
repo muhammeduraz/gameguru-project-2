@@ -9,6 +9,8 @@ namespace Assets.Scripts.PlayerModule
     {
         #region Variables
 
+        private bool _isActive;
+
         private IInteractable _cacheInteractable;
 
         [Header("Components")]
@@ -22,8 +24,13 @@ namespace Assets.Scripts.PlayerModule
 
         public void Dispose() { }
 
+        public void Enable() => _isActive = true;
+        public void Disable() => _isActive = false;
+
         private void OnTriggerEnter(Collider otherCollider)
         {
+            if (!_isActive) return;
+
             otherCollider.TryGetComponent(out _cacheInteractable);
             if (_cacheInteractable == null) return;
 

@@ -49,6 +49,7 @@ namespace Assets.Scripts.StateModule
             base.OnStateEnter();
 
             _cubePlacer.Disable();
+            _cubePlacer.DisableInput();
             _cubePlacer.DisableCurrentCube();
 
             _customInput.Disable();
